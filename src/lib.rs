@@ -7,6 +7,10 @@ fn read_log(filename: String) -> PyResult<String> {
     Ok(filename)
 }
 
+fn read_line(filename: String) -> String {
+    "Line"
+}
+
 /// A Python module implemented in Rust.
 #[pymodule]
 fn geolo_view(py: Python, m: &PyModule) -> PyResult<()> {

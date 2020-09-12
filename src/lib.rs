@@ -12,8 +12,11 @@ fn read_log(filename: String) -> PyResult<String> {
     Ok(contents)
 }
 
-fn read_line(filename: String) -> String {
-    "Line"
+fn read_line(filename: String) -> PyResult<String> {
+    let mut file = File::open(filename)?;
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)?;
+    Ok(contents)
 }
 
 /// A Python module implemented in Rust.

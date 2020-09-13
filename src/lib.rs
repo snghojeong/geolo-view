@@ -6,10 +6,7 @@ use std::io::prelude::*;
 /// Formats the sum of two numbers as string.
 #[pyfunction]
 fn read_log(filename: String) -> PyResult<String> {
-    let mut file = File::open(filename)?;
-    let mut contents = String::new();
-    file.read_to_string(&mut contents)?;
-    Ok(contents)
+    read_line(filename)
 }
 
 fn read_line(filename: String) -> PyResult<String> {

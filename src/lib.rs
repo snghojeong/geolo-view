@@ -7,12 +7,12 @@ use std::io::{self, BufRead};
 /// Formats the sum of two numbers as string.
 #[pyfunction]
 fn read_log(filename: String) -> PyResult<String> {
-    read_line(filename)
+    read_line(filename, 0)
 }
 
-fn read_line(filename: String) -> PyResult<String> {
+fn read_line(filename: String, idx: i32) -> PyResult<String> {
     let mut file = File::open(filename)?;
-    Ok(io::BufReader::new(file).lines())
+    Ok(io::BufReader::new(file).lines()[idx])
 }
 
 /// A Python module implemented in Rust.

@@ -6,7 +6,7 @@ use std::io::{self, BufRead};
 
 /// Formats the sum of two numbers as string.
 #[pyfunction]
-fn read_log(filename: String) -> PyResult<String> {
+fn read_log(filename: String, line_ofs: i32, line_cnt: i32) -> PyResult<String> {
     read_line(filename, 0)
 }
 

@@ -6,8 +6,15 @@ use std::io::{self, BufRead};
 
 /// Formats the sum of two numbers as string.
 #[pyfunction]
-fn read_log(filename: String, line_ofs: i32, line_cnt: i32) -> PyResult<String> {
-    Ok("test".to_string())
+fn read_log(path: String, line_ofs: i32, line_cnt: i32) -> PyResult<String> {
+    let file = File::open(path)?;
+    let mut reader = io::BufReader::new(file);
+    let mut buffer = String::new();
+
+    buffer.clear();
+    let len = reader.read_line(&mut buffer)?;
+
+    Ok(buffer)
 }
 
 /// A Python module implemented in Rust.

@@ -3,11 +3,13 @@ use pyo3::wrap_pyfunction;
 use std::fs::File;
 use std::io::prelude::*;
 use std::io::{self, BufRead};
+use std::io::SeekFrom;
 
 /// Formats the sum of two numbers as string.
 #[pyfunction]
-fn read_log(path: String, line_ofs: i32, line_cnt: i32) -> PyResult<String> {
-    let file = File::open(path)?;
+fn read_log(path: String, pos: u64, line_cnt: i32) -> PyResult<String> {
+    let mut file = File::open(path)?;
+    file.seek(SeekFrom::Start(pos)).unwrap();
     let mut reader = io::BufReader::new(file);
     let mut buffer = String::new();
 

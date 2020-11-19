@@ -7,7 +7,7 @@ use std::io::SeekFrom;
 
 /// Formats the sum of two numbers as string.
 #[pyfunction]
-fn read_log(path: String, pos: u64, line_cnt: i32) -> PyResult<String> {
+fn read_log(path: String, pos: u64, line_cnt: i32, is_reverse: bool) -> PyResult<String> {
     let mut file = File::open(path)?;
     file.seek(SeekFrom::Start(pos)).unwrap();
     let mut reader = io::BufReader::new(file);

@@ -9,7 +9,11 @@ use std::io::SeekFrom;
 #[pyfunction]
 fn read_log(path: String, pos: u64, line_cnt: i32, is_reverse: bool) -> PyResult<String> {
     let mut file = File::open(path)?;
-    file.seek(SeekFrom::Start(pos)).unwrap();
+    if is_reverse {
+        file.seek(SeekFrom::Start(pos-100)).unwrap();
+    } else {
+        file.seek(SeekFrom::Start(pos)).unwrap();
+    }
     let mut reader = io::BufReader::new(file);
     let mut buffer = String::new();
 

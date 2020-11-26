@@ -18,7 +18,7 @@ fn read_log(path: String, pos: u64, line_cnt: i32, is_reverse: bool) -> PyResult
     let mut buffer = String::new();
 
     buffer.clear();
-    for n in 1..line_cnt {
+    for n in 0..line_cnt {
         let len = reader.read_line(&mut buffer)?;
     }
 

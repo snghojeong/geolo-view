@@ -1,6 +1,5 @@
 import geolo_view
 import sys
 
-ret = geolo_view.read_log(sys.argv[1], 0, 1, False)
-print(sys.argv[1])
+ret = geolo_view.read_log(sys.argv[1], 0, int(sys.argv[2]), False)
 print(ret)

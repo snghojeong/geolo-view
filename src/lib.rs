@@ -8,8 +8,19 @@ use std::io::Result;
 
 fn read_log_line(reader: &mut dyn BufRead) -> Result<String> {
     let mut buffer = String::new();
-    buffer.clear();
-    reader.read_line(&mut buffer)?;
+
+    loop {
+        buffer.clear();
+        reader.read_line(&mut buffer)?;
+
+        if buffer.len() > 4 {
+            let log_idx = &buffer[0..3];
+            if log_idx.parse::<f64>().is_ok() {
+                break;
+            }
+        }
+    }
+
     Ok(buffer)
 }
 

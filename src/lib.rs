@@ -38,7 +38,8 @@ fn read_log(path: String, pos: u64, line_cnt: i32, is_reverse: bool) -> PyResult
 
     buffer.clear();
     for _n in 0..line_cnt {
-        buffer.push_str(&*read_log_line(&mut reader)?);
+        let log_line_str = read_log_line(&mut reader)?;
+        buffer.push_str(&log_line_str);
     }
 
     Ok(buffer)

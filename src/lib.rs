@@ -6,6 +6,10 @@ use std::io::SeekFrom;
 use std::io::BufReader;
 use std::io::Result;
 
+fn is_log_line() -> bool {
+    true
+}
+
 fn read_log_line(reader: &mut dyn BufRead) -> Result<String> {
     let mut buffer = String::new();
 

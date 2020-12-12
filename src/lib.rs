@@ -6,8 +6,19 @@ use std::io::SeekFrom;
 use std::io::BufReader;
 use std::io::Result;
 
-fn is_log_line() -> bool {
-    true
+fn is_log_line(log_line: &str) -> bool {
+    if log_line.len() > 4 {
+        let log_idx = &log_line[0..3];
+        if log_idx.parse::<f64>().is_ok() {
+            true
+        }
+        else {
+            false
+        }
+    }
+    else {
+        false
+    }
 }
 
 fn read_log_line(reader: &mut dyn BufRead) -> Result<String> {
@@ -17,11 +28,8 @@ fn read_log_line(reader: &mut dyn BufRead) -> Result<String> {
         buffer.clear();
         reader.read_line(&mut buffer)?;
 
-        if buffer.len() > 4 {
-            let log_idx = &buffer[0..3];
-            if log_idx.parse::<f64>().is_ok() {
-                break;
-            }
+        if is_log_line(buffer.as_str()) {
+            break;
         }
     }
 

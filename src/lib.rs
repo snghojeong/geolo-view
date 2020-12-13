@@ -9,12 +9,13 @@ use std::io::Result;
 fn is_log_line(log_line: &str) -> bool {
     if log_line.len() > 4 {
         let log_idx = &log_line[0..3];
-        if log_idx.parse::<f64>().is_ok() {
-            true
-        }
-        else {
-            false
-        }
+        let has_log_idx = if log_idx.parse::<f64>().is_ok() { true }
+                          else { false };
+        let date = &log_line[5..10];
+        let has_date = if date.parse::<f64>().is_ok() { true }
+                       else { false };
+        if has_log_idx && has_date { true }
+        else { false }
     }
     else {
         false

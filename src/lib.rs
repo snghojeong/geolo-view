@@ -24,17 +24,26 @@ fn is_log_line(log_line: &str) -> bool {
 
 fn read_log_line(reader: &mut dyn BufRead) -> Result<String> {
     let mut buffer = String::new();
+    let mut ret = String::new();
 
     loop {
         buffer.clear();
         reader.read_line(&mut buffer)?;
 
         if is_log_line(buffer.as_str()) {
-            break;
+            if ret.len() > 0 {
+                break;
+            }
+            else {
+                ret.push_str(buffer.as_str());
+            }
+        }
+        else {
+            ret.push_str(buffer.as_str());
         }
     }
 
-    Ok(buffer)
+    Ok(ret)
 }
 
 /// Formats the sum of two numbers as string.

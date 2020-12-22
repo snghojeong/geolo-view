@@ -6,6 +6,10 @@ use std::io::SeekFrom;
 use std::io::BufReader;
 use std::io::Result;
 
+fn level(log_line: &str) -> &str {
+    &log_line[25..28]
+}
+
 fn is_log_line(log_line: &str) -> bool {
     if log_line.len() > 4 {
         let log_idx = &log_line[0..3];

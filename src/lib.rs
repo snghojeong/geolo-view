@@ -36,7 +36,7 @@ fn is_log_line(log_line: &str) -> bool {
 
 /// Formats the sum of two numbers as string.
 #[pyfunction]
-fn read_log(path: String, pos: u64, line_cnt: i32, is_reverse: bool) -> PyResult<String> {
+fn read_log(path: String, pos: u64, line_cnt: i32, lv: String, md: String, is_reverse: bool) -> PyResult<String> {
     let mut file = File::open(path)?;
     if is_reverse {
         file.seek(SeekFrom::Start(pos-100)).unwrap();

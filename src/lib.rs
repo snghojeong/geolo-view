@@ -14,6 +14,10 @@ fn mod_name(log_line: &str) -> &str {
     &log_line[30..28]
 }
 
+fn contents(log_line: &str) -> &str {
+    &log_line[29..]
+}
+
 fn is_log_line(log_line: &str) -> bool {
     if log_line.len() > 4 {
         let log_idx = &log_line[0..3];

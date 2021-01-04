@@ -6,6 +6,10 @@ use std::io::SeekFrom;
 use std::io::BufReader;
 use std::io::Result;
 
+fn idx(log_line: &str) -> &str {
+    &log_line[0..3]
+}
+
 fn date(log_line: &str) -> &str {
     &log_line[5..10]
 }

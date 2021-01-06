@@ -15,7 +15,7 @@ fn date(log_line: &str) -> &str {
 }
 
 fn level(log_line: &str) -> &str {
-    &log_line[25..28]
+    &log_line[25..29]
 }
 
 fn mod_name(log_line: &str) -> &str {
@@ -63,6 +63,7 @@ fn read_log(path: String, pos: u64, line_cnt: i32, lv: String, md: String, is_re
 
             log_buf.push_str(line_buf.as_str());
             if is_log_line(line_buf.as_str()) {
+                println!("lv: {}", level(line_buf.as_str()));
                 break;
             }
         }

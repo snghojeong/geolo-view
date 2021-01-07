@@ -61,10 +61,11 @@ fn read_log(path: String, pos: u64, line_cnt: i32, lv: String, md: String, is_re
             line_buf.clear();
             reader.read_line(&mut line_buf)?;
 
-            log_buf.push_str(line_buf.as_str());
             if is_log_line(line_buf.as_str()) {
-                println!("lv: {}", level(line_buf.as_str()));
-                break;
+                if level(line_buf.as_str()).trim() == lv {
+                    log_buf.push_str(line_buf.as_str());
+                    break;
+                }
             }
         }
     }

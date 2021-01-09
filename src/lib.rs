@@ -54,8 +54,9 @@ fn read_log(path: String, pos: u64, line_cnt: i32, lv: String, md: String, is_re
     let mut reader = BufReader::new(file);
     let mut log_buf = String::new();
 
+    let mut pushed_cnt = 0;
     log_buf.clear();
-    for _n in 0..line_cnt {
+    loop {
         let mut line_buf = String::new();
         loop {
             line_buf.clear();
@@ -64,9 +65,14 @@ fn read_log(path: String, pos: u64, line_cnt: i32, lv: String, md: String, is_re
             if is_log_line(line_buf.as_str()) {
                 if level(line_buf.as_str()).trim() == lv {
                     log_buf.push_str(line_buf.as_str());
+                    pushed_cnt += 1;
                     break;
                 }
             }
+        }
+
+        if (pushed_cnt >= line_cnt) {
+            break;
         }
     }
 

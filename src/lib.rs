@@ -42,6 +42,10 @@ fn is_log_line(log_line: &str) -> bool {
     }
 }
 
+fn is_filtered_log(log_line: &str, lv: &str, md: &str) -> bool {
+    level(log_line).trim() != lv
+}
+
 /// Formats the sum of two numbers as string.
 #[pyfunction]
 fn read_log(path: String, pos: u64, line_cnt: i32, lv: String, md: String, is_reverse: bool) -> PyResult<String> {

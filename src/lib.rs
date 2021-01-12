@@ -67,7 +67,7 @@ fn read_log(path: String, pos: u64, line_cnt: i32, lv: String, md: String, is_re
             reader.read_line(&mut line_buf)?;
 
             if is_log_line(line_buf.as_str()) {
-                if level(line_buf.as_str()).trim() == lv {
+                if !is_filtered_log(line_buf.as_str(), lv.as_str(), md.as_str()) {
                     log_buf.push_str(line_buf.as_str());
                     pushed_cnt += 1;
                     break;

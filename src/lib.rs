@@ -42,9 +42,16 @@ fn is_log_line(log_line: &str) -> bool {
     }
 }
 
-fn is_filtered_log(log_line: &str, lv: &str, md: &str) -> bool {
-    level(log_line).trim() != lv
+/*
+fn filter_log(log_line: &str, lv: &str, md: &str) -> Option<&str> {
+    if level(log_line).trim() == lv {
+        Some(log_line)
+    }
+    else {
+        None
+    }
 }
+*/
 
 /// Formats the sum of two numbers as string.
 #[pyfunction]
@@ -58,21 +65,30 @@ fn read_log(path: String, pos: u64, line_cnt: i32, lv: String, md: String, is_re
     let mut reader = BufReader::new(file);
     let mut log_buf = String::new();
 
+    let mut line_buf = String::new();
     let mut pushed_cnt = 0;
-    log_buf.clear();
+    reader.read_line(&mut line_buf)?;
     loop {
-        let mut line_buf = String::new();
-        loop {
-            line_buf.clear();
-            reader.read_line(&mut line_buf)?;
 
-            if is_log_line(line_buf.as_str()) {
-                if !is_filtered_log(line_buf.as_str(), lv.as_str(), md.as_str()) {
-                    log_buf.push_str(line_buf.as_str());
+        if is_log_line(line_buf.as_str()) && (level(line_buf.as_str()).trim() == lv) {
+            log_buf.push_str(line_buf.as_str());
+
+            loop {
+                line_buf.clear();
+                reader.read_line(&mut line_buf)?;
+
+                if is_log_line(line_buf.as_str()) {
                     pushed_cnt += 1;
                     break;
                 }
+                else {
+                    log_buf.push_str(line_buf.as_str());
+                }
             }
+        }
+        else {
+            line_buf.clear();
+            reader.read_line(&mut line_buf)?;
         }
 
         if (pushed_cnt >= line_cnt) {

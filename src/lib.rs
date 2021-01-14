@@ -42,16 +42,14 @@ fn is_log_line(log_line: &str) -> bool {
     }
 }
 
-/*
-fn filter_log(log_line: &str, lv: &str, md: &str) -> Option<&str> {
+fn filter_log(log_line: &str, lv: &str, md: &str) -> Option<String> {
     if level(log_line).trim() == lv {
-        Some(log_line)
+        Some(log_line.to_owned())
     }
     else {
         None
     }
 }
-*/
 
 /// Formats the sum of two numbers as string.
 #[pyfunction]

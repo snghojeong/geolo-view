@@ -42,9 +42,9 @@ fn is_log_line(log_line: &str) -> bool {
     }
 }
 
-fn filter_log(log_line: &str, lv: &str, md: &str) -> Option<String> {
-    if level(log_line).trim() == lv {
-        Some(log_line.to_owned())
+fn filter_log<'a>(log_line: &'a String, lv: &'a String, md: &'a String) -> Option<&'a String> {
+    if is_log_line(log_line.as_str()) && (level(log_line.as_str()).trim() == lv.as_str()) {
+        Some(log_line)
     }
     else {
         None
@@ -68,25 +68,27 @@ fn read_log(path: String, pos: u64, line_cnt: i32, lv: String, md: String, is_re
     reader.read_line(&mut line_buf)?;
     loop {
 
-        if is_log_line(line_buf.as_str()) && (level(line_buf.as_str()).trim() == lv) {
-            log_buf.push_str(line_buf.as_str());
-
-            loop {
+        match (filter_log(&line_buf, &lv, &md)) {
+            None => {
                 line_buf.clear();
                 reader.read_line(&mut line_buf)?;
+            },
+            Some(filtered_log) => {
+                log_buf.push_str(filtered_log.as_str());
 
-                if is_log_line(line_buf.as_str()) {
-                    pushed_cnt += 1;
-                    break;
-                }
-                else {
-                    log_buf.push_str(line_buf.as_str());
+                loop {
+                    line_buf.clear();
+                    reader.read_line(&mut line_buf)?;
+
+                    if is_log_line(line_buf.as_str()) {
+                        pushed_cnt += 1;
+                        break;
+                    }
+                    else {
+                        log_buf.push_str(line_buf.as_str());
+                    }
                 }
             }
-        }
-        else {
-            line_buf.clear();
-            reader.read_line(&mut line_buf)?;
         }
 
         if (pushed_cnt >= line_cnt) {

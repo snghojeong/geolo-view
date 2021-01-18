@@ -19,11 +19,15 @@ fn level(log_line: &str) -> &str {
 }
 
 fn mod_name(log_line: &str) -> &str {
-    &log_line[30..28]
+    &log_line[30..38]
+}
+
+fn strm_name(log_line: &str) -> &str {
+    &log_line[38..48]
 }
 
 fn contents(log_line: &str) -> &str {
-    &log_line[29..]
+    &log_line[49..]
 }
 
 fn is_log_line(log_line: &str) -> bool {

@@ -18,12 +18,12 @@ fn level(log_line: &str) -> &str {
     &log_line[25..29]
 }
 
-fn mod_name(log_line: &str) -> &str {
-    &log_line[30..38]
+fn strm_wq_name(log_line: &str) -> &str {
+    &log_line[30..57]
 }
 
-fn strm_name(log_line: &str) -> &str {
-    &log_line[38..48]
+fn mod_name(log_line: &str) -> &str {
+    &log_line[30..38]
 }
 
 fn contents(log_line: &str) -> &str {

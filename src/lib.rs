@@ -23,7 +23,7 @@ fn strm_wq_name(log_line: &str) -> &str {
 }
 
 fn mod_name(log_line: &str) -> &str {
-    &log_line[30..38]
+    &log_line[58..78]
 }
 
 fn contents(log_line: &str) -> &str {

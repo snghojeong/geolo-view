@@ -6,6 +6,29 @@ use std::io::SeekFrom;
 use std::io::BufReader;
 use std::io::Result;
 
+struct LogReader {
+    reader: BufReader<File>,
+    line_buf: String,
+}
+
+impl LogReader {
+    fn open(path: &str) -> Result<Self> {
+        let mut file = File::open(path)?;
+        let inst = LogReader {
+            reader: BufReader::new(file),
+            line_buf: String::new(),
+        };
+        Ok(inst)
+    }
+
+    fn read_log_line(&mut self, reader: &mut BufReader<File>) -> Result<String> {
+        let mut log_buf = String::new();
+        reader.read_line(&mut self.line_buf)?;
+        log_buf.push_str(self.line_buf.as_str());
+        Ok(log_buf)
+    }
+}
+
 fn idx(log_line: &str) -> &str {
     &log_line[0..3]
 }

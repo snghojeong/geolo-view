@@ -100,41 +100,18 @@ impl LogReader {
 /// Formats the sum of two numbers as string.
 #[pyfunction]
 fn read_log(path: String, pos: u64, line_cnt: i32, lv: String, md: String, is_reverse: bool) -> PyResult<String> {
-    let mut file = File::open(path)?;
-    if is_reverse {
-        file.seek(SeekFrom::Start(pos-100)).unwrap();
-    } else {
-        file.seek(SeekFrom::Start(pos)).unwrap();
-    }
-    let mut reader = BufReader::new(file);
+    let mut reader = LogReader::open(path.as_str())?;
     let mut log_buf = String::new();
 
-    let mut line_buf = String::new();
     let mut pushed_cnt = 0;
-    reader.read_line(&mut line_buf)?;
     loop {
-
-        match (filter_log(&line_buf, &lv, &md)) {
-            None => {
-                line_buf.clear();
-                reader.read_line(&mut line_buf)?;
-            },
+        let log_line = reader.read_log_line()?;
+        match (filter_log(&log_line, &lv, &md)) {
             Some(filtered_log) => {
                 log_buf.push_str(filtered_log.as_str());
-
-                loop {
-                    line_buf.clear();
-                    reader.read_line(&mut line_buf)?;
-
-                    if is_log_line(line_buf.as_str()) {
-                        pushed_cnt += 1;
-                        break;
-                    }
-                    else {
-                        log_buf.push_str(line_buf.as_str());
-                    }
-                }
-            }
+                pushed_cnt += 1;
+            },
+            None => { }
         }
 
         if (pushed_cnt >= line_cnt) {

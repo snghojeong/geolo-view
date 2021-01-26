@@ -47,7 +47,22 @@ fn is_log_line(log_line: &str) -> bool {
 }
 
 fn filter_log<'a>(log_line: &'a String, lv: &'a String, md: &'a String) -> Option<&'a String> {
-    if level(log_line.as_str()).trim() == lv.as_str() {
+    let mut is_match_md = false;
+    let split_md = md.split(',');
+    if md == "" {
+        is_match_md = true;
+    }
+    else {
+        for s in split_md {
+            if mod_name(log_line.as_str()).contains(s) {
+                is_match_md = true;
+            }
+        }
+    }
+
+    let is_match_lv = level(log_line.as_str()).trim() == lv.as_str();
+
+    if is_match_lv && is_match_md {
         Some(log_line)
     }
     else {

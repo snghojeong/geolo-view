@@ -46,16 +46,18 @@ fn is_log_line(log_line: &str) -> bool {
     }
 }
 
-fn filter_log<'a>(log_line: &'a String, lv: &'a String, md: &'a String) -> Option<&'a String> {
+fn filter_log<'a>(log_line: &'a String, lv: &'a String, md: &'a Option<String>) -> Option<&'a String> {
     let mut is_match_md = false;
-    let split_md = md.split(',');
-    if md == "" {
-        is_match_md = true;
-    }
-    else {
-        for s in split_md {
-            if mod_name(log_line.as_str()).contains(s) {
-                is_match_md = true;
+    match (md) {
+        None => { 
+            is_match_md = true;
+        },
+        Some(md_str) => {
+            let split_md = md_str.split(',');
+            for s in split_md {
+                if mod_name(log_line.as_str()).contains(s) {
+                    is_match_md = true;
+                }
             }
         }
     }
@@ -117,11 +119,13 @@ impl LogReader {
 fn read_log(path: String, pos: u64, line_cnt: i32, lv: String, md: String, is_reverse: bool) -> PyResult<String> {
     let mut reader = LogReader::open(path.as_str())?;
     let mut log_buf = String::new();
+    let md_op = if md == "" { None }
+                else { Some(md) };
 
     let mut pushed_cnt = 0;
     loop {
         let log_line = reader.read_log_line()?;
-        match (filter_log(&log_line, &lv, &md)) {
+        match (filter_log(&log_line, &lv, &md_op)) {
             Some(filtered_log) => {
                 log_buf.push_str(filtered_log.as_str());
                 pushed_cnt += 1;

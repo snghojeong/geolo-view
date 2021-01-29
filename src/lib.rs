@@ -1,5 +1,6 @@
 use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
+use pyo3::types::PyDict;
 use std::fs::File;
 use std::io::prelude::*;
 use std::io::SeekFrom;
@@ -115,17 +116,21 @@ impl LogReader {
 }
 
 /// Formats the sum of two numbers as string.
-#[pyfunction]
-fn read_log(path: String, pos: u64, line_cnt: i32, lv: String, md: String, is_reverse: bool) -> PyResult<String> {
+#[pyfunction(kwds="**")]
+fn read_log(path: String, pos: u64, line_cnt: i32, is_backward: bool, lv: String, kwds: Option<&PyDict>) -> PyResult<String> {
     let mut reader = LogReader::open(path.as_str())?;
     let mut log_buf = String::new();
-    let md_op = if md == "" { None }
-                else { Some(md) };
+    let mut md = match (kwds) {
+        Some(dict) => {
+            dict.get_item::<&str>("md").unwrap().extract()?
+        },
+        None => { None }
+    };
 
     let mut pushed_cnt = 0;
     loop {
         let log_line = reader.read_log_line()?;
-        match (filter_log(&log_line, &lv, &md_op)) {
+        match (filter_log(&log_line, &lv, &md)) {
             Some(filtered_log) => {
                 log_buf.push_str(filtered_log.as_str());
                 pushed_cnt += 1;

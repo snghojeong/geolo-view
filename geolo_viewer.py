@@ -14,9 +14,9 @@ lv_str = ""
 if args.lv:
     lv_str = args.lv
 
-md_str = ""
 if args.md:
-    md_str = args.md
+    ret = geolo_view.read_log(args.file, 0, int(args.cnt), False, lv_str, md=args.md)
+else:
+    ret = geolo_view.read_log(args.file, 0, int(args.cnt), False, lv_str)
 
-ret = geolo_view.read_log(args.file, 0, int(args.cnt), lv_str, md_str, False)
 print(ret)

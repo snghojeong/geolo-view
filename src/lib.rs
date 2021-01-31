@@ -47,7 +47,7 @@ fn is_log_line(log_line: &str) -> bool {
     }
 }
 
-fn filter_log<'a>(log_line: &'a String, lv: &'a String, md: &'a Option<String>) -> Option<&'a String> {
+fn filter_log<'a>(log_line: &'a String, lv: &'a Option<String>, md: &'a Option<String>) -> Option<&'a String> {
     let mut is_match_md = false;
     match (md) {
         None => { 
@@ -63,7 +63,20 @@ fn filter_log<'a>(log_line: &'a String, lv: &'a String, md: &'a Option<String>) 
         }
     }
 
-    let is_match_lv = level(log_line.as_str()).trim() == lv.as_str();
+    let mut is_match_lv = false;
+    match (lv) {
+        None => { 
+            is_match_lv = true;
+        },
+        Some(lv_str) => {
+            let split_lv = lv_str.split(',');
+            for s in split_lv {
+                if level(log_line.as_str()).contains(s) {
+                    is_match_lv = true;
+                }
+            }
+        }
+    }
 
     if is_match_lv && is_match_md {
         Some(log_line)
@@ -117,12 +130,18 @@ impl LogReader {
 
 /// Formats the sum of two numbers as string.
 #[pyfunction(kwds="**")]
-fn read_log(path: String, pos: u64, line_cnt: i32, is_backward: bool, lv: String, kwds: Option<&PyDict>) -> PyResult<String> {
+fn read_log(path: String, pos: u64, line_cnt: i32, is_backward: bool, kwds: Option<&PyDict>) -> PyResult<String> {
     let mut reader = LogReader::open(path.as_str())?;
     let mut log_buf = String::new();
-    let mut md = match (kwds) {
+    let md : Option<String> = match (kwds) {
         Some(dict) => {
             dict.get_item::<&str>("md").unwrap().extract()?
+        },
+        None => { None }
+    };
+    let lv : Option<String> = match (kwds) {
+        Some(dict) => {
+            dict.get_item::<&str>("lv").unwrap().extract()?
         },
         None => { None }
     };

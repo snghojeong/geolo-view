@@ -10,13 +10,13 @@ parser.add_argument('--md', required=False, help='module name to filter')
 
 args = parser.parse_args()
 
-lv_str = ""
-if args.lv:
-    lv_str = args.lv
-
-if args.md:
-    ret = geolo_view.read_log(args.file, 0, int(args.cnt), False, lv_str, md=args.md)
+if args.md and args.lv:
+    ret = geolo_view.read_log(args.file, 0, int(args.cnt), False, lv=args.lv, md=args.md)
+elif args.md:
+    ret = geolo_view.read_log(args.file, 0, int(args.cnt), False, md=args.md)
+elif args.lv:
+    ret = geolo_view.read_log(args.file, 0, int(args.cnt), False, lv=args.lv)
 else:
-    ret = geolo_view.read_log(args.file, 0, int(args.cnt), False, lv_str)
+    ret = geolo_view.read_log(args.file, 0, int(args.cnt), False)
 
 print(ret)

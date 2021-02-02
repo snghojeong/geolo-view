@@ -135,7 +135,13 @@ fn read_log(path: String, pos: u64, line_cnt: i32, is_backward: bool, kwds: Opti
     let mut log_buf = String::new();
     let md : Option<String> = match (kwds) {
         Some(dict) => {
-            dict.get_item::<&str>("md").unwrap().extract()?
+            let item = dict.get_item::<&str>("md");
+            match (item) {
+                Some(md_item) => {
+                    md_item.extract()?
+                },
+                None => { None }
+            }
         },
         None => { None }
     };

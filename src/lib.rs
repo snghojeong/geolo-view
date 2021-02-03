@@ -147,7 +147,13 @@ fn read_log(path: String, pos: u64, line_cnt: i32, is_backward: bool, kwds: Opti
     };
     let lv : Option<String> = match (kwds) {
         Some(dict) => {
-            dict.get_item::<&str>("lv").unwrap().extract()?
+            let item = dict.get_item::<&str>("lv");
+            match (item) {
+                Some(lv_item) => {
+                    lv_item.extract()?
+                },
+                None => { None }
+            }
         },
         None => { None }
     };

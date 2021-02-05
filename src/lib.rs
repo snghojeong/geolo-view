@@ -19,7 +19,7 @@ fn level(log_line: &str) -> &str {
     &log_line[25..29]
 }
 
-fn strm_wq_name(log_line: &str) -> &str {
+fn qlabel(log_line: &str) -> &str {
     &log_line[30..57]
 }
 

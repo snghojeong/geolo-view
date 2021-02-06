@@ -133,29 +133,29 @@ impl LogReader {
 fn read_log(path: String, pos: u64, line_cnt: i32, is_backward: bool, kwds: Option<&PyDict>) -> PyResult<String> {
     let mut reader = LogReader::open(path.as_str())?;
     let mut log_buf = String::new();
-    let md : Option<String> = match (kwds) {
+    let mut md : Option<String>;
+    let mut lv : Option<String>;
+    match (kwds) {
         Some(dict) => {
             let item = dict.get_item::<&str>("md");
             match (item) {
                 Some(md_item) => {
-                    md_item.extract()?
+                    md = md_item.extract()?;
                 },
-                None => { None }
+                None => { md = None; }
             }
-        },
-        None => { None }
-    };
-    let lv : Option<String> = match (kwds) {
-        Some(dict) => {
             let item = dict.get_item::<&str>("lv");
             match (item) {
                 Some(lv_item) => {
-                    lv_item.extract()?
+                    lv = lv_item.extract()?;
                 },
-                None => { None }
+                None => { lv = None; }
             }
         },
-        None => { None }
+        None => { 
+            md = None;
+            lv = None;
+        }
     };
 
     let mut pushed_cnt = 0;

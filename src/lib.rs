@@ -27,8 +27,12 @@ fn mod_name(log_line: &str) -> &str {
     &log_line[58..78]
 }
 
+fn line(log_line: &str) -> &str {
+    &log_line[80..83]
+}
+
 fn contents(log_line: &str) -> &str {
-    &log_line[49..]
+    &log_line[85..]
 }
 
 fn is_log_line(log_line: &str) -> bool {

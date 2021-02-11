@@ -145,6 +145,17 @@ fn read_log(path: String, pos: u64, line_cnt: i32, is_backward: bool, kwds: Opti
             match (item) {
                 Some(md_item) => {
                     md = md_item.extract()?;
+                    match (md) {
+                        None => { md = None; },
+                        Some(md_str) => {
+                            let split_md = md_str.split(',');
+                            for s in split_md {
+                                if mod_name(log_line.as_str()).contains(s) {
+                                    is_match_md = true;
+                                }
+                            }
+                        }
+                    }
                 },
                 None => { md = None; }
             }

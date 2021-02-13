@@ -6,6 +6,7 @@ use std::io::prelude::*;
 use std::io::SeekFrom;
 use std::io::BufReader;
 use std::io::Result;
+use std::str::Split;
 
 fn idx(log_line: &str) -> &str {
     &log_line[0..3]
@@ -51,15 +52,14 @@ fn is_log_line(log_line: &str) -> bool {
     }
 }
 
-fn filter_log<'a>(log_line: &'a String, lv: &'a Option<String>, md: &'a Option<String>) -> Option<&'a String> {
+fn filter_log<'a>(log_line: &'a String, lv: &'a Option<String>, md: &'a Option<Vec<&str>>) -> Option<&'a String> {
     let mut is_match_md = false;
     match (md) {
         None => { 
             is_match_md = true;
         },
-        Some(md_str) => {
-            let split_md = md_str.split(',');
-            for s in split_md {
+        Some(md) => {
+            for s in md {
                 if mod_name(log_line.as_str()).contains(s) {
                     is_match_md = true;
                 }
@@ -145,17 +145,6 @@ fn read_log(path: String, pos: u64, line_cnt: i32, is_backward: bool, kwds: Opti
             match (item) {
                 Some(md_item) => {
                     md = md_item.extract()?;
-                    match (md) {
-                        None => { md = None; },
-                        Some(md_str) => {
-                            let split_md = md_str.split(',');
-                            for s in split_md {
-                                if mod_name(log_line.as_str()).contains(s) {
-                                    is_match_md = true;
-                                }
-                            }
-                        }
-                    }
                 },
                 None => { md = None; }
             }
@@ -173,10 +162,17 @@ fn read_log(path: String, pos: u64, line_cnt: i32, is_backward: bool, kwds: Opti
         }
     };
 
+    let split_md = match (md) {
+        Some(md) => {
+            Some(md.split(',').collect())
+        },
+        None => { None }
+    };
+
     let mut pushed_cnt = 0;
     loop {
         let log_line = reader.read_log_line()?;
-        match (filter_log(&log_line, &lv, &md)) {
+        match (filter_log(&log_line, &lv, &split_md)) {
             Some(filtered_log) => {
                 log_buf.push_str(filtered_log.as_str());
                 pushed_cnt += 1;

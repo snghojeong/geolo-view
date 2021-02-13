@@ -52,14 +52,14 @@ fn is_log_line(log_line: &str) -> bool {
     }
 }
 
-fn filter_log<'a>(log_line: &'a String, lv: &'a Option<String>, md: &'a Option<Vec<&str>>) -> Option<&'a String> {
+fn filter_log<'a>(log_line: &'a String, lv: &'a Option<String>, md: &'a Option<String>) -> Option<&'a String> {
     let mut is_match_md = false;
     match (md) {
         None => { 
             is_match_md = true;
         },
-        Some(md) => {
-            for s in md {
+        Some(md_str) => {
+            for s in md_str.split(',') {
                 if mod_name(log_line.as_str()).contains(s) {
                     is_match_md = true;
                 }
@@ -73,8 +73,7 @@ fn filter_log<'a>(log_line: &'a String, lv: &'a Option<String>, md: &'a Option<V
             is_match_lv = true;
         },
         Some(lv_str) => {
-            let split_lv = lv_str.split(',');
-            for s in split_lv {
+            for s in lv_str.split(',') {
                 if level(log_line.as_str()).contains(s) {
                     is_match_lv = true;
                 }
@@ -137,8 +136,8 @@ impl LogReader {
 fn read_log(path: String, pos: u64, line_cnt: i32, is_backward: bool, kwds: Option<&PyDict>) -> PyResult<String> {
     let mut reader = LogReader::open(path.as_str())?;
     let mut log_buf = String::new();
-    let mut md : Option<String>;
-    let mut lv : Option<String>;
+    let md : Option<String>;
+    let lv : Option<String>;
     match (kwds) {
         Some(dict) => {
             let item = dict.get_item::<&str>("md");
@@ -162,17 +161,10 @@ fn read_log(path: String, pos: u64, line_cnt: i32, is_backward: bool, kwds: Opti
         }
     };
 
-    let split_md = match (md) {
-        Some(md) => {
-            Some(md.split(',').collect())
-        },
-        None => { None }
-    };
-
     let mut pushed_cnt = 0;
     loop {
         let log_line = reader.read_log_line()?;
-        match (filter_log(&log_line, &lv, &split_md)) {
+        match (filter_log(&log_line, &lv, &md)) {
             Some(filtered_log) => {
                 log_buf.push_str(filtered_log.as_str());
                 pushed_cnt += 1;

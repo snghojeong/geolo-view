@@ -52,7 +52,7 @@ fn is_log_line(log_line: &str) -> bool {
     }
 }
 
-fn filter_log<'a>(log_line: &'a String, lv: &'a Option<String>, md: &'a Option<Vec<&str>>) -> Option<&'a String> {
+fn filter_log<'a>(log_line: &'a String, lv: &'a Option<Vec<&str>>, md: &'a Option<Vec<&str>>) -> Option<&'a String> {
     let mut is_match_md = false;
     match (md) {
         None => { 
@@ -73,7 +73,7 @@ fn filter_log<'a>(log_line: &'a String, lv: &'a Option<String>, md: &'a Option<V
             is_match_lv = true;
         },
         Some(lv_str) => {
-            for s in lv_str.split(',') {
+            for s in lv_str {
                 if level(log_line.as_str()).contains(s) {
                     is_match_lv = true;
                 }
@@ -166,11 +166,15 @@ fn read_log(path: String, pos: u64, line_cnt: i32, is_backward: bool, kwds: Opti
         Some(md_str) => { Some(md_str.as_str().split(',').collect()) }
     };
 
+    let split_lv = match (&lv) {
+        None => { None },
+        Some(lv_str) => { Some(lv_str.as_str().split(',').collect()) }
+    };
 
     let mut pushed_cnt = 0;
     loop {
         let log_line = reader.read_log_line()?;
-        match (filter_log(&log_line, &lv, &split_md)) {
+        match (filter_log(&log_line, &split_lv, &split_md)) {
             Some(filtered_log) => {
                 log_buf.push_str(filtered_log.as_str());
                 pushed_cnt += 1;

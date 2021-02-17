@@ -131,6 +131,23 @@ impl LogReader {
     }
 }
 
+fn split_filter_keywords<'a>(kwds: Option<&'a PyDict>, kwd: &'a str) -> Option<String> {
+    let dict: &PyDict = kwds?;
+    println!("kwds exist!");
+    let md_item = dict.get_item::<&str>("md")?;
+    println!("md item exist!");
+    let md_str = md_item.extract();
+    let extract_md: Option<String>;
+    match (md_str) {
+        Err(e) => { return None; },
+        Ok(unwrap_md_str) => {
+            println!("md str exist!");
+            extract_md = unwrap_md_str;
+        }
+    }
+    return extract_md;
+}
+
 /// Formats the sum of two numbers as string.
 #[pyfunction(kwds="**")]
 fn read_log(path: String, pos: u64, line_cnt: i32, is_backward: bool, kwds: Option<&PyDict>) -> PyResult<String> {

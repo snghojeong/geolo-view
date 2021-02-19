@@ -131,7 +131,7 @@ impl LogReader {
     }
 }
 
-fn split_filter_keywords<'a>(kwds: Option<&'a PyDict>, kwd: &'a str) -> Option<String> {
+fn split_filter_keywords(kwds: Option<&PyDict>, kwd: &str) -> Option<Vec<String>> {
     let dict: &PyDict = kwds?;
     println!("kwds exist!");
     let md_item = dict.get_item::<&str>("md")?;
@@ -145,7 +145,17 @@ fn split_filter_keywords<'a>(kwds: Option<&'a PyDict>, kwd: &'a str) -> Option<S
             extract_md = unwrap_md_str;
         }
     }
-    return extract_md;
+    let split_md = extract_md?;
+    println!("split_md exist!");
+    let split_md_list: Vec<&str> = split_md.as_str().split(',').collect();
+
+    let mut items = Vec::<String>::with_capacity(split_md_list.len());
+    for item in &split_md_list {
+        let mut md_str = String::new();
+        md_str.push_str(item);
+        items.push(md_str);
+    }
+    return Some(items);
 }
 
 /// Formats the sum of two numbers as string.

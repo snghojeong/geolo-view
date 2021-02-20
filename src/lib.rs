@@ -52,7 +52,7 @@ fn is_log_line(log_line: &str) -> bool {
     }
 }
 
-fn filter_log<'a>(log_line: &'a String, lv: &'a Option<Vec<&str>>, md: &'a Option<Vec<&str>>) -> Option<&'a String> {
+fn filter_log<'a>(log_line: &'a String, lv: &'a Option<Vec<&str>>, md: &'a Option<Vec<String>>) -> Option<&'a String> {
     let mut is_match_md = false;
     match (md) {
         None => { 
@@ -134,7 +134,7 @@ impl LogReader {
 fn split_filter_keywords(kwds: Option<&PyDict>, kwd: &str) -> Option<Vec<String>> {
     let dict: &PyDict = kwds?;
     println!("kwds exist!");
-    let md_item = dict.get_item::<&str>("md")?;
+    let md_item = dict.get_item::<&str>(kwd)?;
     println!("md item exist!");
     let md_str = md_item.extract();
     let extract_md: Option<String>;
@@ -188,12 +188,7 @@ fn read_log(path: String, pos: u64, line_cnt: i32, is_backward: bool, kwds: Opti
         }
     };
 
-    let split_md_test = split_filter_keywords(kwds, "md");
-
-    let split_md = match (&md) {
-        None => { None },
-        Some(md_str) => { Some(md_str.as_str().split(',').collect()) }
-    };
+    let split_md = split_filter_keywords(kwds, "md");
 
     let split_lv = match (&lv) {
         None => { None },

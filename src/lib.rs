@@ -188,6 +188,8 @@ fn read_log(path: String, pos: u64, line_cnt: i32, is_backward: bool, kwds: Opti
         }
     };
 
+    let split_md_test = split_filter_keywords(kwds, "md");
+
     let split_md = match (&md) {
         None => { None },
         Some(md_str) => { Some(md_str.as_str().split(',').collect()) }

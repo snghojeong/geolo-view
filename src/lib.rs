@@ -52,7 +52,7 @@ fn is_log_line(log_line: &str) -> bool {
     }
 }
 
-fn filter_log<'a>(log_line: &'a String, lv: &'a Option<Vec<&str>>, md: &'a Option<Vec<String>>) -> Option<&'a String> {
+fn filter_log<'a>(log_line: &'a String, lv: &'a Option<Vec<String>>, md: &'a Option<Vec<String>>) -> Option<&'a String> {
     let mut is_match_md = false;
     match (md) {
         None => { 
@@ -132,30 +132,11 @@ impl LogReader {
 }
 
 fn split_filter_keywords(kwds: Option<&PyDict>, kwd: &str) -> Option<Vec<String>> {
-    let dict: &PyDict = kwds?;
-    println!("kwds exist!");
-    let md_item = dict.get_item::<&str>(kwd)?;
-    println!("md item exist!");
-    let md_str = md_item.extract();
-    let extract_md: Option<String>;
-    match (md_str) {
-        Err(e) => { return None; },
-        Ok(unwrap_md_str) => {
-            println!("md str exist!");
-            extract_md = unwrap_md_str;
-        }
-    }
-    let split_md = extract_md?;
-    println!("split_md exist!");
-    let split_md_list: Vec<&str> = split_md.as_str().split(',').collect();
-
-    let mut items = Vec::<String>::with_capacity(split_md_list.len());
-    for item in &split_md_list {
-        let mut md_str = String::new();
-        md_str.push_str(item);
-        items.push(md_str);
-    }
-    return Some(items);
+    let item_str: String = kwds?.get_item::<&str>(kwd)?
+                           .extract().unwrap_or(None)?;
+    let fltr_kwd_list: Vec<&str> = item_str.as_str().split(',').collect();
+    let ret_items = fltr_kwd_list.iter().map(|s| { s.to_string() }).collect();
+    Some(ret_items)
 }
 
 /// Formats the sum of two numbers as string.
@@ -163,42 +144,14 @@ fn split_filter_keywords(kwds: Option<&PyDict>, kwd: &str) -> Option<Vec<String>
 fn read_log(path: String, pos: u64, line_cnt: i32, is_backward: bool, kwds: Option<&PyDict>) -> PyResult<String> {
     let mut reader = LogReader::open(path.as_str())?;
     let mut log_buf = String::new();
-    let md : Option<String>;
-    let lv : Option<String>;
-    match (kwds) {
-        Some(dict) => {
-            let item = dict.get_item::<&str>("md");
-            match (item) {
-                Some(md_item) => {
-                    md = md_item.extract()?;
-                },
-                None => { md = None; }
-            }
-            let item = dict.get_item::<&str>("lv");
-            match (item) {
-                Some(lv_item) => {
-                    lv = lv_item.extract()?;
-                },
-                None => { lv = None; }
-            }
-        },
-        None => { 
-            md = None;
-            lv = None;
-        }
-    };
 
-    let split_md = split_filter_keywords(kwds, "md");
-
-    let split_lv = match (&lv) {
-        None => { None },
-        Some(lv_str) => { Some(lv_str.as_str().split(',').collect()) }
-    };
+    let md = split_filter_keywords(kwds, "md");
+    let lv = split_filter_keywords(kwds, "lv");
 
     let mut pushed_cnt = 0;
     loop {
         let log_line = reader.read_log_line()?;
-        match (filter_log(&log_line, &split_lv, &split_md)) {
+        match (filter_log(&log_line, &lv, &md)) {
             Some(filtered_log) => {
                 log_buf.push_str(filtered_log.as_str());
                 pushed_cnt += 1;

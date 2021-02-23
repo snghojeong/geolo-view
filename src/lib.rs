@@ -141,7 +141,7 @@ fn split_filter_keywords(kwds: Option<&PyDict>, kwd: &str) -> Option<Vec<String>
 
 /// Formats the sum of two numbers as string.
 #[pyfunction(kwds="**")]
-fn read_log(path: String, pos: u64, line_cnt: i32, is_backward: bool, kwds: Option<&PyDict>) -> PyResult<String> {
+fn read_log(py: Python, path: String, pos: u64, line_cnt: i32, is_backward: bool, kwds: Option<&PyDict>) -> PyResult<String> {
     let mut reader = LogReader::open(path.as_str())?;
     let mut log_buf = String::new();
 

@@ -130,6 +130,10 @@ impl LogReader {
 
         Ok(log_line)
     }
+
+    fn strm_pos(&mut self) -> Result<u64> {
+        self.reader.seek(SeekFrom::Current(0))
+    }
 }
 
 fn split_filter_keywords(kwds: Option<&PyDict>, kwd: &str) -> Option<Vec<String>> {

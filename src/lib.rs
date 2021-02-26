@@ -169,6 +169,8 @@ fn read_log(py: Python, path: String, pos: u64, line_cnt: i32, is_backward: bool
         }
     }
 
+    println!("Stream position: { }", reader.strm_pos().unwrap());
+
     Ok(log_buf)
 }
 

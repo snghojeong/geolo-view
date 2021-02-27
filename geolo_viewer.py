@@ -19,4 +19,5 @@ elif args.lv:
 else:
     ret = geolo_view.read_log(args.file, 0, int(args.cnt), False)
 
-print(ret)
+print(ret["log"])
+print(ret["pos"])

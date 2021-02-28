@@ -122,8 +122,11 @@ impl LogReader {
         loop {
             log_line.push_str(self.line_buf.as_str());
             self.line_buf.clear();
-            self.reader.read_line(&mut self.line_buf)?;
-            if is_log_line(self.line_buf.as_str()) {
+            let read_len = self.reader.read_line(&mut self.line_buf)?;
+            if read_len == 0 {
+                return Err(std::io::Error::new(std::io::ErrorKind::Other, ""));
+            }
+            else if is_log_line(self.line_buf.as_str()) {
                 break;
             }
         }
@@ -155,13 +158,20 @@ fn read_log(py: Python, path: String, pos: u64, line_cnt: i32, is_backward: bool
 
     let mut pushed_cnt = 0;
     loop {
-        let log_line = reader.read_log_line()?;
-        match (filter_log(&log_line, &lv, &md)) {
-            Some(filtered_log) => {
-                log_buf.push_str(filtered_log.as_str());
-                pushed_cnt += 1;
+        let log_line = reader.read_log_line();
+        match (log_line) {
+            Ok(unwrap_log_ln) => {
+                match (filter_log(&unwrap_log_ln, &lv, &md)) {
+                    Some(filtered_log) => {
+                        log_buf.push_str(filtered_log.as_str());
+                        pushed_cnt += 1;
+                    },
+                    None => { }
+                }
             },
-            None => { }
+            Err(error) => {
+                break;
+            }
         }
 
         if (pushed_cnt >= line_cnt) {

@@ -106,6 +106,7 @@ impl LogReader {
             if is_log_line(line_buf.as_str()) {
                 break;
             }
+            line_buf.clear();
         }
 
         let inst = LogReader {

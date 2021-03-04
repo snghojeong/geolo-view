@@ -31,8 +31,9 @@ class MyApp(QWidget):
 
         self.setLayout(vbox)
 
-        ret = geolo_view.read_log('jup.log', 0, 1, False)
+        ret = geolo_view.read_log('jup.log', 0, 5, False)
         self.tb.append(ret["log"])
+        self.pos = ret["pos"]
 
         self.setWindowTitle('QTextBrowser')
         self.setGeometry(100, 300, 1200, 300)
@@ -45,6 +46,9 @@ class MyApp(QWidget):
 
     def clear_text(self):
         self.tb.clear()
+        ret = geolo_view.read_log('jup.log', self.pos, 5, False)
+        self.tb.append(ret["log"])
+        self.pos = ret["pos"]
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

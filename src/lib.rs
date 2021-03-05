@@ -8,7 +8,7 @@ use std::io::BufReader;
 use std::io::Result;
 use std::str::Split;
 
-fn idx(log_line: &str) -> &str {
+fn seq(log_line: &str) -> &str {
     &log_line[0..3]
 }
 
@@ -38,13 +38,13 @@ fn contents(log_line: &str) -> &str {
 
 fn is_log_line(log_line: &str) -> bool {
     if log_line.len() > 4 {
-        let log_idx = &log_line[0..3];
-        let has_log_idx = if log_idx.parse::<f64>().is_ok() { true }
+        let log_seq = &log_line[0..3];
+        let has_log_seq = if log_seq.parse::<f64>().is_ok() { true }
                           else { false };
         let date = date(log_line);
         let has_date = if date.parse::<f64>().is_ok() { true }
                        else { false };
-        if has_log_idx && has_date { true }
+        if has_log_seq && has_date { true }
         else { false }
     }
     else {

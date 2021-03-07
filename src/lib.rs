@@ -32,7 +32,7 @@ fn line(log_line: &str) -> &str {
     &log_line[80..83]
 }
 
-fn contents(log_line: &str) -> &str {
+fn msg(log_line: &str) -> &str {
     &log_line[85..]
 }
 

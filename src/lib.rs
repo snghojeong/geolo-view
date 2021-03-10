@@ -52,7 +52,10 @@ fn is_log_line(log_line: &str) -> bool {
     }
 }
 
-fn filter_log<'a>(log_line: &'a String, lv: &'a Option<Vec<String>>, md: &'a Option<Vec<String>>) -> Option<&'a String> {
+fn filter_log<'a>(log_line: &'a String, 
+                  lv: &'a Option<Vec<String>>, 
+                  md: &'a Option<Vec<String>>, 
+                  msg: &'a Option<Vec<String>>) -> Option<&'a String> {
     let mut is_match_md = false;
     match (md) {
         None => { 
@@ -163,7 +166,7 @@ fn read_log(py: Python, path: String, pos: u64, line_cnt: i32, is_backward: bool
         let log_line = reader.read_log_line();
         match (log_line) {
             Ok(unwrap_log_ln) => {
-                match (filter_log(&unwrap_log_ln, &lv, &md)) {
+                match (filter_log(&unwrap_log_ln, &lv, &md, &msg)) {
                     Some(filtered_log) => {
                         log_buf.push_str(filtered_log.as_str());
                         pushed_cnt += 1;

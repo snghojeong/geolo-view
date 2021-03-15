@@ -37,7 +37,21 @@ fn filter_log<'a>(log_line: &'a String,
         }
     }
 
-    if is_match_lv && is_match_md {
+    let mut is_match_msg = false;
+    match (msg) {
+        None => { 
+            is_match_msg = true;
+        },
+        Some(msg_str) => {
+            for s in msg_str {
+                if ear_log_reader::msg(log_line.as_str()).contains(s) {
+                    is_match_msg = true;
+                }
+            }
+        }
+    }
+
+    if is_match_lv && is_match_md && is_match_msg {
         Some(log_line)
     }
     else {

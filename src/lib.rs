@@ -75,6 +75,7 @@ fn read_log(py: Python, path: String, pos: u64, line_cnt: i32, is_backward: bool
 
     let md = split_filter_keywords(kwds, "md");
     let lv = split_filter_keywords(kwds, "lv");
+    let qlabel = split_filter_keywords(kwds, "qlabel");
     let msg = split_filter_keywords(kwds, "msg");
 
     let mut pushed_cnt = 0;

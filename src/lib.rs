@@ -3,7 +3,7 @@ use pyo3::wrap_pyfunction;
 use pyo3::types::PyDict;
 use std::str::Split;
 
-mod ear_log_reader;
+mod log_reader;
 
 fn filter_log<'a>(log_line: &'a String, 
                   lv: &'a Option<Vec<String>>, 
@@ -16,7 +16,7 @@ fn filter_log<'a>(log_line: &'a String,
         },
         Some(md_str) => {
             for s in md_str {
-                if ear_log_reader::mod_name(log_line.as_str()).contains(s) {
+                if log_reader::mod_name(log_line.as_str()).contains(s) {
                     is_match_md = true;
                 }
             }
@@ -30,7 +30,7 @@ fn filter_log<'a>(log_line: &'a String,
         },
         Some(lv_str) => {
             for s in lv_str {
-                if ear_log_reader::level(log_line.as_str()).contains(s) {
+                if log_reader::level(log_line.as_str()).contains(s) {
                     is_match_lv = true;
                 }
             }
@@ -44,7 +44,7 @@ fn filter_log<'a>(log_line: &'a String,
         },
         Some(msg_str) => {
             for s in msg_str {
-                if ear_log_reader::msg(log_line.as_str()).contains(s) {
+                if log_reader::msg(log_line.as_str()).contains(s) {
                     is_match_msg = true;
                 }
             }
@@ -70,7 +70,7 @@ fn split_filter_keywords(kwds: Option<&PyDict>, kwd: &str) -> Option<Vec<String>
 /// Formats the sum of two numbers as string.
 #[pyfunction(kwds="**")]
 fn read_log(py: Python, path: String, pos: u64, line_cnt: i32, is_backward: bool, kwds: Option<&PyDict>) -> PyResult<Py<PyDict>> {
-    let mut reader = ear_log_reader::LogReader::open(path.as_str(), pos)?;
+    let mut reader = log_reader::LogReader::open(path.as_str(), pos)?;
     let mut log_buf = String::new();
 
     let md = split_filter_keywords(kwds, "md");

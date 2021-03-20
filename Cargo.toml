@@ -15,4 +15,5 @@ version = "0.11.1"
 features = ["extension-module"]
 
 [dependencies.rev_lines]
-version = "0.2.1"
+git = "https://github.com/snghojeong/rev_lines.git"
+branch = "feature/seek-pos"

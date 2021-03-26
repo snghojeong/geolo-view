@@ -59,8 +59,7 @@ pub struct LogReader {
 impl LogReader {
     fn read_line(&mut self) -> Result<String> {
         if self.is_backward {
-            let rev_lines = self.rev_lines.as_ref();
-            let rev_line_result = rev_lines.next();
+            let rev_line_result = self.rev_lines.as_mut().unwrap().next();
             match (rev_line_result) {
                 Some(line_str) => { 
                     self.line_buf = line_str;
@@ -70,8 +69,7 @@ impl LogReader {
             }
         }
         else {
-            let buf_reader = self.buf_reader.as_ref();
-            buf_reader.read_line(&mut self.line_buf)?;
+            self.buf_reader.as_mut().unwrap().read_line(&mut self.line_buf)?;
             Ok(self.line_buf)
         }
     }
@@ -128,7 +126,7 @@ impl LogReader {
             Ok(0)
         }
         else {
-            let buf_reader = self.buf_reader.as_ref();
+            let buf_reader = self.buf_reader.as_ref().unwrap();
             buf_reader.seek(SeekFrom::Current(0))
         }
     }

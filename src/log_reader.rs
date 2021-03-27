@@ -57,20 +57,20 @@ pub struct LogReader {
 }
 
 impl LogReader {
-    fn read_line(&mut self) -> Result<String> {
+    fn read_line(&mut self) -> Result<&String> {
         if self.is_backward {
             let rev_line_result = self.rev_lines.as_mut().unwrap().next();
             match (rev_line_result) {
                 Some(line_str) => { 
                     self.line_buf = line_str;
-                    Ok(self.line_buf) 
+                    Ok(&self.line_buf) 
                 },
                 None => Err(std::io::Error::new(std::io::ErrorKind::Other, "")),
             }
         }
         else {
             self.buf_reader.as_mut().unwrap().read_line(&mut self.line_buf)?;
-            Ok(self.line_buf)
+            Ok(&self.line_buf)
         }
     }
 
@@ -79,7 +79,7 @@ impl LogReader {
         let mut reader = BufReader::new(file);
         let mut line_buf = String::new();
 
-        let inst = LogReader {
+        let mut inst = LogReader {
             is_backward: is_backward,
             buf_reader: None,
             rev_lines: None,
@@ -100,7 +100,7 @@ impl LogReader {
             if is_log_line(line_str.as_str()) {
                 break;
             }
-            line_buf.clear();
+            inst.line_buf.clear();
         }
 
         Ok(inst)
@@ -126,7 +126,7 @@ impl LogReader {
             Ok(0)
         }
         else {
-            let buf_reader = self.buf_reader.as_ref().unwrap();
+            let buf_reader = self.buf_reader.as_mut().unwrap();
             buf_reader.seek(SeekFrom::Current(0))
         }
     }

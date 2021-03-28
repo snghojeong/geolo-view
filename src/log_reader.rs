@@ -62,7 +62,7 @@ impl LogReader {
             let rev_line_result = self.rev_lines.as_mut().unwrap().next();
             match (rev_line_result) {
                 Some(line_str) => { 
-                    self.line_buf = line_str;
+                    self.line_buf = line_str + "\n";
                     Ok(&self.line_buf) 
                 },
                 None => Err(std::io::Error::new(std::io::ErrorKind::Other, "")),
@@ -88,6 +88,7 @@ impl LogReader {
 
         if is_backward {
             let mut rev_lines = RevLines::new(reader, pos).unwrap();
+            rev_lines.next();
             inst.rev_lines = Some(rev_lines);
         }
         else {

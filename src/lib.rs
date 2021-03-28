@@ -85,7 +85,12 @@ fn read_log(py: Python, path: String, pos: u64, line_cnt: i32, is_backward: bool
             Ok(unwrap_log_ln) => {
                 match (filter_log(&unwrap_log_ln, &lv, &md, &msg)) {
                     Some(filtered_log) => {
-                        log_buf.push_str(filtered_log.as_str());
+                        if is_backward {
+                            log_buf = filtered_log.to_owned() + &log_buf;
+                        }
+                        else {
+                            log_buf.push_str(filtered_log.as_str());
+                        }
                         pushed_cnt += 1;
                     },
                     None => { }

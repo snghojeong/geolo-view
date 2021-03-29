@@ -10,6 +10,8 @@ class MyApp(QWidget):
     def __init__(self):
         super().__init__()
         self.initUI()
+        self.pos_list = list()
+        self.pos_list.append(0)
 
     def initUI(self):
         self.le = QLineEdit()
@@ -21,19 +23,24 @@ class MyApp(QWidget):
         fontdb = QFontDatabase()
         self.tb.setFont(fontdb.systemFont(QFontDatabase.FixedFont))
 
-        self.clear_btn = QPushButton('Clear')
-        self.clear_btn.pressed.connect(self.clear_text)
+        self.prev_btn = QPushButton('Prev')
+        self.prev_btn.pressed.connect(self.prev_logs)
+
+        self.next_btn = QPushButton('Next')
+        self.next_btn.pressed.connect(self.next_logs)
 
         vbox = QVBoxLayout()
         vbox.addWidget(self.le, 0)
         vbox.addWidget(self.tb, 1)
-        vbox.addWidget(self.clear_btn, 2)
+        vbox.addWidget(self.prev_btn, 2)
+        vbox.addWidget(self.next_btn, 3)
 
         self.setLayout(vbox)
 
         ret = geolo_view.read_log('jup.log', 0, 5, False)
         self.tb.append(ret["log"])
-        self.pos = ret["pos"]
+        self.prev_pos = 0
+        self.next_pos = ret["pos"]
 
         self.setWindowTitle('QTextBrowser')
         self.setGeometry(100, 300, 1200, 300)
@@ -44,11 +51,21 @@ class MyApp(QWidget):
         self.tb.append(text)
         self.le.clear()
 
-    def clear_text(self):
+    def prev_logs(self):
         self.tb.clear()
-        ret = geolo_view.read_log('jup.log', self.pos, 5, False)
+        ret = geolo_view.read_log('jup.log', self.prev_pos, 5, False)
         self.tb.append(ret["log"])
-        self.pos = ret["pos"]
+        self.pos_list.pop()
+        self.prev_pos = self.pos_list[-2]
+        self.next_pos = ret["pos"]
+
+    def next_logs(self):
+        self.tb.clear()
+        ret = geolo_view.read_log('jup.log', self.next_pos, 5, False)
+        self.tb.append(ret["log"])
+        self.prev_pos = self.pos_list[-1]
+        self.pos_list.append(self.next_pos)
+        self.next_pos = ret["pos"]
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

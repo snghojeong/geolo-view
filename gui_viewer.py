@@ -32,8 +32,10 @@ class MyApp(QWidget):
         vbox = QVBoxLayout()
         vbox.addWidget(self.le, 0)
         vbox.addWidget(self.tb, 1)
-        vbox.addWidget(self.prev_btn, 2)
-        vbox.addWidget(self.next_btn, 3)
+        hbox = QHBoxLayout()
+        hbox.addWidget(self.prev_btn, 0)
+        hbox.addWidget(self.next_btn, 1)
+        vbox.addLayout(hbox, 2)
 
         self.setLayout(vbox)
 

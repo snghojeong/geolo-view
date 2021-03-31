@@ -25,9 +25,11 @@ class MyApp(QWidget):
 
         self.prev_btn = QPushButton('Prev')
         self.prev_btn.pressed.connect(self.prev_logs)
+        self.prev_btn.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
 
         self.next_btn = QPushButton('Next')
         self.next_btn.pressed.connect(self.next_logs)
+        self.next_btn.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
 
         vbox = QVBoxLayout()
         vbox.addWidget(self.le, 0)
@@ -39,7 +41,7 @@ class MyApp(QWidget):
 
         self.setLayout(vbox)
 
-        ret = geolo_view.read_log('jup.log', 0, 5, False)
+        ret = geolo_view.read_log('jup.log', 0, 50, False)
         self.tb.append(ret["log"])
         self.prev_pos = 0
         self.next_pos = ret["pos"]
@@ -55,7 +57,7 @@ class MyApp(QWidget):
 
     def prev_logs(self):
         self.tb.clear()
-        ret = geolo_view.read_log('jup.log', self.prev_pos, 5, False)
+        ret = geolo_view.read_log('jup.log', self.prev_pos, 50, False)
         self.tb.append(ret["log"])
         self.pos_list.pop()
         self.prev_pos = self.pos_list[-2]
@@ -63,7 +65,7 @@ class MyApp(QWidget):
 
     def next_logs(self):
         self.tb.clear()
-        ret = geolo_view.read_log('jup.log', self.next_pos, 5, False)
+        ret = geolo_view.read_log('jup.log', self.next_pos, 50, False)
         self.tb.append(ret["log"])
         self.prev_pos = self.pos_list[-1]
         self.pos_list.append(self.next_pos)

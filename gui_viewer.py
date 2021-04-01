@@ -50,6 +50,9 @@ class MyApp(QWidget):
         self.setGeometry(100, 300, 1200, 300)
         self.show()
 
+        scrollBar = self.tb.verticalScrollBar()
+        scrollBar.setValue(0)
+
     def append_text(self):
         text = self.le.text()
         self.tb.append(text)
@@ -62,6 +65,8 @@ class MyApp(QWidget):
         self.pos_list.pop()
         self.prev_pos = self.pos_list[-2]
         self.next_pos = ret["pos"]
+        scrollBar = self.tb.verticalScrollBar()
+        scrollBar.setValue(scrollBar.maximum())
 
     def next_logs(self):
         self.tb.clear()
@@ -70,6 +75,8 @@ class MyApp(QWidget):
         self.prev_pos = self.pos_list[-1]
         self.pos_list.append(self.next_pos)
         self.next_pos = ret["pos"]
+        scrollBar = self.tb.verticalScrollBar()
+        scrollBar.setValue(0)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

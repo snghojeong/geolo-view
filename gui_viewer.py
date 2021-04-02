@@ -13,6 +13,8 @@ class MyApp(QWidget):
         self.pos_list = list()
         self.pos_list.append(0)
 
+        self.fltr_md = ""
+
     def initUI(self):
         self.le = QLineEdit()
         self.le.returnPressed.connect(self.append_text)
@@ -54,13 +56,18 @@ class MyApp(QWidget):
         scrollBar.setValue(0)
 
     def append_text(self):
-        text = self.le.text()
-        self.tb.append(text)
-        self.le.clear()
+        self.fltr_md = self.le.text()
+        self.tb.clear()
+        ret = geolo_view.read_log('jup.log', 0, 50, False, md=self.fltr_md)
+        self.tb.append(ret["log"])
+        self.prev_pos = 0
+        self.next_pos = ret["pos"]
+        scrollBar = self.tb.verticalScrollBar()
+        scrollBar.setValue(0)
 
     def prev_logs(self):
         self.tb.clear()
-        ret = geolo_view.read_log('jup.log', self.prev_pos, 50, False)
+        ret = geolo_view.read_log('jup.log', self.prev_pos, 50, False, md=self.fltr_md)
         self.tb.append(ret["log"])
         self.pos_list.pop()
         self.prev_pos = self.pos_list[-2]
@@ -70,7 +77,7 @@ class MyApp(QWidget):
 
     def next_logs(self):
         self.tb.clear()
-        ret = geolo_view.read_log('jup.log', self.next_pos, 50, False)
+        ret = geolo_view.read_log('jup.log', self.next_pos, 50, False, md=self.fltr_md)
         self.tb.append(ret["log"])
         self.prev_pos = self.pos_list[-1]
         self.pos_list.append(self.next_pos)

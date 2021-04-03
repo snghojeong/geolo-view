@@ -13,7 +13,7 @@ args = parser.parse_args()
 
 prog_exit = 0
 pos = 0
-prev_pos = 0
+pos_list = list()
 is_backward = False
 while prog_exit == 0:
     read_pos = pos
@@ -32,10 +32,9 @@ while prog_exit == 0:
     if keyin == 'q':
         prog_exit = 1
     elif keyin == 'b':
-        is_backward = True
+        pos = pos_list.pop()
     elif keyin == 'f':
-        is_backward = False
+        pos_list.append(pos)
+        pos = ret["pos"]
     elif ret["log"] == "":
         prog_exit = 1
-    prev_pos = pos
-    pos = ret["pos"]

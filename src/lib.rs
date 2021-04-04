@@ -69,8 +69,8 @@ fn split_filter_keywords(kwds: Option<&PyDict>, kwd: &str) -> Option<Vec<String>
 
 /// Formats the sum of two numbers as string.
 #[pyfunction(kwds="**")]
-fn read_log(py: Python, path: String, pos: u64, line_cnt: i32, is_backward: bool, kwds: Option<&PyDict>) -> PyResult<Py<PyDict>> {
-    let mut reader = log_reader::LogReader::open(path.as_str(), pos, is_backward)?;
+fn read_log(py: Python, path: String, pos: u64, line_cnt: i32, kwds: Option<&PyDict>) -> PyResult<Py<PyDict>> {
+    let mut reader = log_reader::LogReader::open(path.as_str(), pos)?;
     let mut log_buf = String::new();
 
     let md = split_filter_keywords(kwds, "md");
@@ -85,12 +85,7 @@ fn read_log(py: Python, path: String, pos: u64, line_cnt: i32, is_backward: bool
             Ok(unwrap_log_ln) => {
                 match (filter_log(&unwrap_log_ln, &lv, &md, &msg)) {
                     Some(filtered_log) => {
-                        if is_backward {
-                            log_buf = filtered_log.to_owned() + &log_buf;
-                        }
-                        else {
-                            log_buf.push_str(filtered_log.as_str());
-                        }
+                        log_buf.push_str(filtered_log.as_str());
                         pushed_cnt += 1;
                     },
                     None => { }

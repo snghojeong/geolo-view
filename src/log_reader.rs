@@ -50,59 +50,30 @@ fn is_log_line(log_line: &str) -> bool {
 }
 
 pub struct LogReader {
-    is_backward: bool,
-    buf_reader: Option<BufReader<File>>,
-    rev_lines: Option<RevLines<File>>,
+    reader: BufReader<File>,
     line_buf: String,
 }
 
 impl LogReader {
-    fn read_line(&mut self) -> Result<&String> {
-        if self.is_backward {
-            let rev_line_result = self.rev_lines.as_mut().unwrap().next();
-            match (rev_line_result) {
-                Some(line_str) => { 
-                    self.line_buf = line_str + "\n";
-                    Ok(&self.line_buf) 
-                },
-                None => Err(std::io::Error::new(std::io::ErrorKind::Other, "")),
-            }
-        }
-        else {
-            self.buf_reader.as_mut().unwrap().read_line(&mut self.line_buf)?;
-            Ok(&self.line_buf)
-        }
-    }
-
-    pub fn open(path: &str, pos: u64, is_backward: bool) -> Result<Self> {
+    pub fn open(path: &str, pos: u64) -> Result<Self> {
         let mut file = File::open(path)?;
         let mut reader = BufReader::new(file);
         let mut line_buf = String::new();
 
-        let mut inst = LogReader {
-            is_backward: is_backward,
-            buf_reader: None,
-            rev_lines: None,
-            line_buf: line_buf,
-        };
-
-        if is_backward {
-            let mut rev_lines = RevLines::new(reader, pos).unwrap();
-            rev_lines.next();
-            inst.rev_lines = Some(rev_lines);
-        }
-        else {
-            reader.seek(SeekFrom::Start(pos)).unwrap();
-            inst.buf_reader = Some(reader);
-        }
+        reader.seek(SeekFrom::Start(pos)).unwrap();
 
         loop {
-            let line_str = inst.read_line()?;
-            if is_log_line(line_str.as_str()) {
+            reader.read_line(&mut line_buf)?;
+            if is_log_line(line_buf.as_str()) {
                 break;
             }
-            inst.line_buf.clear();
+            line_buf.clear();
         }
+
+        let mut inst = LogReader {
+            reader: reader,
+            line_buf: line_buf,
+        };
 
         Ok(inst)
     }
@@ -113,7 +84,7 @@ impl LogReader {
         loop {
             log_line.push_str(self.line_buf.as_str());
             self.line_buf.clear();
-            let read_ret = self.read_line()?;
+            self.reader.read_line(&mut self.line_buf)?;
             if is_log_line(self.line_buf.as_str()) {
                 break;
             }
@@ -123,13 +94,7 @@ impl LogReader {
     }
 
     pub fn strm_pos(&mut self) -> Result<u64> {
-        if self.is_backward {
-            Ok(0)
-        }
-        else {
-            let buf_reader = self.buf_reader.as_mut().unwrap();
-            buf_reader.seek(SeekFrom::Current(0))
-        }
+        self.reader.seek(SeekFrom::Current(0))
     }
 }
 

@@ -43,7 +43,7 @@ class MyApp(QWidget):
 
         self.setLayout(vbox)
 
-        ret = geolo_view.read_log('jup.log', 0, 50, False)
+        ret = geolo_view.read_log('jup.log', 0, 50)
         self.tb.append(ret["log"])
         self.prev_pos = 0
         self.next_pos = ret["pos"]
@@ -58,7 +58,7 @@ class MyApp(QWidget):
     def append_text(self):
         self.fltr_md = self.le.text()
         self.tb.clear()
-        ret = geolo_view.read_log('jup.log', 0, 50, False, md=self.fltr_md)
+        ret = geolo_view.read_log('jup.log', 0, 50, md=self.fltr_md)
         self.tb.append(ret["log"])
         self.prev_pos = 0
         self.next_pos = ret["pos"]
@@ -67,7 +67,7 @@ class MyApp(QWidget):
 
     def prev_logs(self):
         self.tb.clear()
-        ret = geolo_view.read_log('jup.log', self.prev_pos, 50, False, md=self.fltr_md)
+        ret = geolo_view.read_log('jup.log', self.prev_pos, 50, md=self.fltr_md)
         self.tb.append(ret["log"])
         self.pos_list.pop()
         self.prev_pos = self.pos_list[-2]
@@ -77,7 +77,7 @@ class MyApp(QWidget):
 
     def next_logs(self):
         self.tb.clear()
-        ret = geolo_view.read_log('jup.log', self.next_pos, 50, False, md=self.fltr_md)
+        ret = geolo_view.read_log('jup.log', self.next_pos, 50, md=self.fltr_md)
         self.tb.append(ret["log"])
         self.prev_pos = self.pos_list[-1]
         self.pos_list.append(self.next_pos)

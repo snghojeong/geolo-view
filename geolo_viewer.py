@@ -14,19 +14,16 @@ args = parser.parse_args()
 prog_exit = 0
 pos = 0
 pos_list = list()
-is_backward = False
 while prog_exit == 0:
     read_pos = pos
-    if is_backward:
-        read_pos = prev_pos
     if args.md and args.lv:
-        ret = geolo_view.read_log(args.file, read_pos, int(args.cnt), is_backward, lv=args.lv, md=args.md)
+        ret = geolo_view.read_log(args.file, read_pos, int(args.cnt), lv=args.lv, md=args.md)
     elif args.md:
-        ret = geolo_view.read_log(args.file, read_pos, int(args.cnt), is_backward, md=args.md)
+        ret = geolo_view.read_log(args.file, read_pos, int(args.cnt), md=args.md)
     elif args.lv:
-        ret = geolo_view.read_log(args.file, read_pos, int(args.cnt), is_backward, lv=args.lv)
+        ret = geolo_view.read_log(args.file, read_pos, int(args.cnt), lv=args.lv)
     else:
-        ret = geolo_view.read_log(args.file, read_pos, int(args.cnt), is_backward)
+        ret = geolo_view.read_log(args.file, read_pos, int(args.cnt))
     print(ret["log"])
     keyin = input('Exit(q), Forward(f), Backward(b):')
     if keyin == 'q':

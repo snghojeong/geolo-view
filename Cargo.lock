@@ -32,7 +32,6 @@ name = "geolo-view"
 version = "0.1.0"
 dependencies = [
  "pyo3 0.11.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "rev_lines 0.2.1 (git+https://github.com/snghojeong/rev_lines.git?branch=feature/seek-pos)",
 ]
 
 [[package]]
@@ -207,11 +206,6 @@ version = "0.1.57"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
-name = "rev_lines"
-version = "0.2.1"
-source = "git+https://github.com/snghojeong/rev_lines.git?branch=feature/seek-pos#cb35165a9ea2e68258f60a08283fa5e02bed15b1"
-
-[[package]]
 name = "scopeguard"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -284,7 +278,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum pyo3cls 0.11.1 (registry+https://github.com/rust-lang/crates.io-index)" = "c3fa17e1ea569d0bf3b7c00f2a9eea831ca05e55dd76f1794c541abba1c64baa"
 "checksum quote 1.0.7 (registry+https://github.com/rust-lang/crates.io-index)" = "aa563d17ecb180e500da1cfd2b028310ac758de548efdd203e18f283af693f37"
 "checksum redox_syscall 0.1.57 (registry+https://github.com/rust-lang/crates.io-index)" = "41cc0f7e4d5d4544e8861606a285bb08d3e70712ccc7d2b84d7c0ccfaf4b05ce"
-"checksum rev_lines 0.2.1 (git+https://github.com/snghojeong/rev_lines.git?branch=feature/seek-pos)" = "<none>"
 "checksum scopeguard 1.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "d29ab0c6d3fc0ee92fe66e2d99f700eab17a8d57d1c1d3b748380fb20baa78cd"
 "checksum smallvec 1.4.2 (registry+https://github.com/rust-lang/crates.io-index)" = "fbee7696b84bbf3d89a1c2eccff0850e3047ed46bfcd2e92c29a2d074d57e252"
 "checksum syn 1.0.38 (registry+https://github.com/rust-lang/crates.io-index)" = "e69abc24912995b3038597a7a593be5053eb0fb44f3cc5beec0deb421790c1f4"

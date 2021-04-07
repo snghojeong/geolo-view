@@ -3,7 +3,6 @@ use std::io::Result;
 use std::io::prelude::*;
 use std::io::SeekFrom;
 use std::io::BufReader;
-use rev_lines::RevLines;
 
 pub fn seq(log_line: &str) -> &str {
     &log_line[0..3]

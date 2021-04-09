@@ -16,8 +16,11 @@ class MyApp(QWidget):
         self.fltr_md = ""
 
     def initUI(self):
-        self.le = QLineEdit()
-        self.le.returnPressed.connect(self.append_text)
+        self.lvle = QLineEdit()
+        self.lvle.returnPressed.connect(self.filter_lv)
+
+        self.mdle = QLineEdit()
+        self.mdle.returnPressed.connect(self.filter_md)
 
         self.tb = QTextBrowser()
         self.tb.setAcceptRichText(True)
@@ -33,13 +36,18 @@ class MyApp(QWidget):
         self.next_btn.pressed.connect(self.next_logs)
         self.next_btn.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
 
+        fltrbox = QHBoxLayout()
+        fltrbox.addWidget(self.lvle, 0)
+        fltrbox.addWidget(self.mdle, 0)
+
+        btnbox = QHBoxLayout()
+        btnbox.addWidget(self.prev_btn, 0)
+        btnbox.addWidget(self.next_btn, 1)
+
         vbox = QVBoxLayout()
-        vbox.addWidget(self.le, 0)
+        vbox.addLayout(fltrbox, 0)
         vbox.addWidget(self.tb, 1)
-        hbox = QHBoxLayout()
-        hbox.addWidget(self.prev_btn, 0)
-        hbox.addWidget(self.next_btn, 1)
-        vbox.addLayout(hbox, 2)
+        vbox.addLayout(btnbox, 2)
 
         self.setLayout(vbox)
 
@@ -55,8 +63,18 @@ class MyApp(QWidget):
         scrollBar = self.tb.verticalScrollBar()
         scrollBar.setValue(0)
 
-    def append_text(self):
-        self.fltr_md = self.le.text()
+    def filter_lv(self):
+        self.fltr_lv = self.lvle.text()
+        self.tb.clear()
+        ret = geolo_view.read_log('jup.log', 0, 50, lv=self.fltr_lv)
+        self.tb.append(ret["log"])
+        self.prev_pos = 0
+        self.next_pos = ret["pos"]
+        scrollBar = self.tb.verticalScrollBar()
+        scrollBar.setValue(0)
+
+    def filter_md(self):
+        self.fltr_md = self.mdle.text()
         self.tb.clear()
         ret = geolo_view.read_log('jup.log', 0, 50, md=self.fltr_md)
         self.tb.append(ret["log"])

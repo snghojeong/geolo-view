@@ -6,10 +6,25 @@ use std::str::Split;
 mod log_reader;
 
 fn filter_log<'a>(log_line: &'a String, 
+                  seq: &'a Option<Vec<String>>, 
                   lv: &'a Option<Vec<String>>, 
                   qlabel: &'a Option<Vec<String>>, 
                   md: &'a Option<Vec<String>>, 
                   msg: &'a Option<Vec<String>>) -> Option<&'a String> {
+    let mut is_match_seq = false;
+    match (seq) {
+        None => { 
+            is_match_seq = true;
+        },
+        Some(seq_str) => {
+            for s in seq_str {
+                if log_reader::seq(log_line.as_str()).contains(s) {
+                    is_match_seq = true;
+                }
+            }
+        }
+    }
+
     let mut is_match_md = false;
     match (md) {
         None => { 
@@ -52,7 +67,7 @@ fn filter_log<'a>(log_line: &'a String,
         }
     }
 
-    if is_match_lv && is_match_md && is_match_msg {
+    if is_match_seq && is_match_lv && is_match_md && is_match_msg {
         Some(log_line)
     }
     else {
@@ -74,6 +89,7 @@ fn read_log(py: Python, path: String, pos: u64, line_cnt: i32, kwds: Option<&PyD
     let mut reader = log_reader::LogReader::open(path.as_str(), pos)?;
     let mut log_buf = String::new();
 
+    let idx = split_filter_keywords(kwds, "idx");
     let md = split_filter_keywords(kwds, "md");
     let lv = split_filter_keywords(kwds, "lv");
     let qlabel = split_filter_keywords(kwds, "qlabel");
@@ -84,7 +100,7 @@ fn read_log(py: Python, path: String, pos: u64, line_cnt: i32, kwds: Option<&PyD
         let log_line = reader.read_log_line();
         match (log_line) {
             Ok(unwrap_log_ln) => {
-                match (filter_log(&unwrap_log_ln, &lv, &qlabel, &md, &msg)) {
+                match (filter_log(&unwrap_log_ln, &idx, &lv, &qlabel, &md, &msg)) {
                     Some(filtered_log) => {
                         log_buf.push_str(filtered_log.as_str());
                         pushed_cnt += 1;

@@ -89,7 +89,7 @@ fn read_log(py: Python, path: String, pos: u64, line_cnt: i32, kwds: Option<&PyD
     let mut reader = log_reader::LogReader::open(path.as_str(), pos)?;
     let mut log_buf = String::new();
 
-    let idx = split_filter_keywords(kwds, "idx");
+    let seq = split_filter_keywords(kwds, "seq");
     let md = split_filter_keywords(kwds, "md");
     let lv = split_filter_keywords(kwds, "lv");
     let qlabel = split_filter_keywords(kwds, "qlabel");
@@ -100,7 +100,7 @@ fn read_log(py: Python, path: String, pos: u64, line_cnt: i32, kwds: Option<&PyD
         let log_line = reader.read_log_line();
         match (log_line) {
             Ok(unwrap_log_ln) => {
-                match (filter_log(&unwrap_log_ln, &idx, &lv, &qlabel, &md, &msg)) {
+                match (filter_log(&unwrap_log_ln, &seq, &lv, &qlabel, &md, &msg)) {
                     Some(filtered_log) => {
                         log_buf.push_str(filtered_log.as_str());
                         pushed_cnt += 1;

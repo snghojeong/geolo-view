@@ -90,9 +90,11 @@ fn read_log(py: Python, path: String, pos: u64, line_cnt: i32, kwds: Option<&PyD
     let mut log_buf = String::new();
 
     let seq = split_filter_keywords(kwds, "seq");
-    let md = split_filter_keywords(kwds, "md");
     let lv = split_filter_keywords(kwds, "lv");
     let qlabel = split_filter_keywords(kwds, "qlabel");
+    let tid = split_filter_keywords(kwds, "tid");
+    let md = split_filter_keywords(kwds, "md");
+    let line = split_filter_keywords(kwds, "line");
     let msg = split_filter_keywords(kwds, "msg");
 
     let mut pushed_cnt = 0;

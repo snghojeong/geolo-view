@@ -19,15 +19,62 @@ class MyApp(QWidget):
         vbox = QVBoxLayout()
 
         # Filter Area
+        self.seq_label = QLabel()
+        self.seq_label.setText("SEQ")
+        self.seqle = QLineEdit()
+        self.seqle.returnPressed.connect(self.apply_filter)
+        self.seq_cbox = QComboBox()
+        self.seq_cbox.setLineEdit(self.seqle)
+        #self.combo_box.addItems(["a", "b"])
+
+        self.lv_label = QLabel()
+        self.lv_label.setText("LEVEL")
         self.lvle = QLineEdit()
-        self.lvle.returnPressed.connect(self.filter_lv)
+        self.lvle.returnPressed.connect(self.apply_filter)
+        self.lv_cbox = QComboBox()
+        self.lv_cbox.setLineEdit(self.lvle)
 
+        self.ql_label = QLabel()
+        self.ql_label.setText("QLABEL")
+        self.qlle = QLineEdit()
+        self.qlle.returnPressed.connect(self.apply_filter)
+        self.ql_cbox = QComboBox()
+        self.ql_cbox.setLineEdit(self.qlle)
+
+        self.tid_label = QLabel()
+        self.tid_label.setText("TID")
+        self.tidle = QLineEdit()
+        self.tidle.returnPressed.connect(self.apply_filter)
+        self.tid_cbox = QComboBox()
+        self.tid_cbox.setLineEdit(self.tidle)
+
+        self.md_label = QLabel()
+        self.md_label.setText("MD")
         self.mdle = QLineEdit()
-        self.mdle.returnPressed.connect(self.filter_md)
+        self.mdle.returnPressed.connect(self.apply_filter)
+        self.md_cbox = QComboBox()
+        self.md_cbox.setLineEdit(self.mdle)
 
-        fltrbox = QHBoxLayout()
-        fltrbox.addWidget(self.lvle, 0)
-        fltrbox.addWidget(self.mdle, 0)
+        self.msg_label = QLabel()
+        self.msg_label.setText("MESSAGE")
+        self.msgle = QLineEdit()
+        self.msgle.returnPressed.connect(self.apply_filter)
+        self.msg_cbox = QComboBox()
+        self.msg_cbox.setLineEdit(self.msgle)
+
+        fltrbox = QGridLayout()
+        fltrbox.addWidget(self.seq_label, 0, 0)
+        fltrbox.addWidget(self.seq_cbox, 1, 0)
+        fltrbox.addWidget(self.lv_label, 0, 1)
+        fltrbox.addWidget(self.lv_cbox, 1, 1)
+        fltrbox.addWidget(self.ql_label, 0, 2)
+        fltrbox.addWidget(self.ql_cbox, 1, 2)
+        fltrbox.addWidget(self.tid_label, 0, 3)
+        fltrbox.addWidget(self.tid_cbox, 1, 3)
+        fltrbox.addWidget(self.md_label, 0, 4)
+        fltrbox.addWidget(self.md_cbox, 1, 4)
+        fltrbox.addWidget(self.msg_label, 0, 5)
+        fltrbox.addWidget(self.msg_cbox, 1, 5)
 
         vbox.addLayout(fltrbox, 0)
 
@@ -69,17 +116,7 @@ class MyApp(QWidget):
         scrollBar = self.tb.verticalScrollBar()
         scrollBar.setValue(0)
 
-    def filter_lv(self):
-        self.fltr_lv = self.lvle.text()
-        self.tb.clear()
-        ret = geolo_view.read_log('jup.log', 0, 50, lv=self.fltr_lv)
-        self.tb.append(ret["log"])
-        self.prev_pos = 0
-        self.next_pos = ret["pos"]
-        scrollBar = self.tb.verticalScrollBar()
-        scrollBar.setValue(0)
-
-    def filter_md(self):
+    def apply_filter(self):
         self.fltr_md = self.mdle.text()
         self.tb.clear()
         ret = geolo_view.read_log('jup.log', 0, 50, md=self.fltr_md)

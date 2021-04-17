@@ -117,9 +117,14 @@ class MyApp(QWidget):
         scrollBar.setValue(0)
 
     def apply_filter(self):
-        self.fltr_md = self.mdle.text()
         self.tb.clear()
-        ret = geolo_view.read_log('jup.log', 0, 50, md=self.fltr_md)
+        ret = geolo_view.read_log('jup.log', 0, 50, 
+                seq=self.seqle.text(),
+                lv=self.lvle.text(),
+                qlabel=self.qlle.text(),
+                tid=self.tidle.text(),
+                md=self.mdle.text(),
+                msg=self.msgle.text())
         self.tb.append(ret["log"])
         self.prev_pos = 0
         self.next_pos = ret["pos"]

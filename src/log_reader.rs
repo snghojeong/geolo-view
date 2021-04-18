@@ -83,7 +83,10 @@ impl LogReader {
         loop {
             log_line.push_str(self.line_buf.as_str());
             self.line_buf.clear();
-            self.reader.read_line(&mut self.line_buf)?;
+            let read_len = self.reader.read_line(&mut self.line_buf)?;
+            if read_len == 0 {
+                return Err(std::io::Error::new(std::io::ErrorKind::NotFound, "End of file"));
+            }
             if is_log_line(self.line_buf.as_str()) {
                 break;
             }

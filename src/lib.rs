@@ -5,25 +5,29 @@ use std::str::Split;
 
 mod log_reader;
 
+fn is_matched(kwds: &Option<Vec<String>>, log_field: &str) -> bool {
+    match (kwds) {
+        None => { 
+            return true;
+        },
+        Some(seq_str) => {
+            for s in seq_str {
+                if log_field.contains(s) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+}
+
 fn filter_log<'a>(log_line: &'a String, 
                   seq: &'a Option<Vec<String>>, 
                   lv: &'a Option<Vec<String>>, 
                   qlabel: &'a Option<Vec<String>>, 
                   md: &'a Option<Vec<String>>, 
                   msg: &'a Option<Vec<String>>) -> Option<&'a String> {
-    let mut is_match_seq = false;
-    match (seq) {
-        None => { 
-            is_match_seq = true;
-        },
-        Some(seq_str) => {
-            for s in seq_str {
-                if log_reader::seq(log_line.as_str()).contains(s) {
-                    is_match_seq = true;
-                }
-            }
-        }
-    }
+    let mut is_match_seq = is_matched(seq, log_reader::seq(log_line.as_str()));
 
     let mut is_match_md = false;
     match (md) {

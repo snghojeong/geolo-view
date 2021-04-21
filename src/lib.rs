@@ -5,7 +5,7 @@ use pyo3::types::PyDict;
 mod log_reader;
 
 fn is_matched(kwds: &Option<Vec<String>>, log_field: &str) -> bool {
-    match (kwds) {
+    match kwds {
         None => { 
             return true;
         },
@@ -60,17 +60,15 @@ fn read_log(py: Python, path: String, pos: u64, line_cnt: i32, kwds: Option<&PyD
     let date = split_filter_keywords(kwds, "date");
     let lv = split_filter_keywords(kwds, "lv");
     let qlabel = split_filter_keywords(kwds, "qlabel");
-    let tid = split_filter_keywords(kwds, "tid");
     let md = split_filter_keywords(kwds, "md");
-    let line = split_filter_keywords(kwds, "line");
     let msg = split_filter_keywords(kwds, "msg");
 
     let mut pushed_cnt = 0;
     loop {
         let log_line = reader.read_log_line();
-        match (log_line) {
+        match log_line {
             Ok(unwrap_log_ln) => {
-                match (filter_log(&unwrap_log_ln, &seq, &date, &lv, &qlabel, &md, &msg)) {
+                match filter_log(&unwrap_log_ln, &seq, &date, &lv, &qlabel, &md, &msg) {
                     Some(filtered_log) => {
                         log_buf.push_str(filtered_log.as_str());
                         pushed_cnt += 1;
@@ -83,7 +81,7 @@ fn read_log(py: Python, path: String, pos: u64, line_cnt: i32, kwds: Option<&PyD
             }
         }
 
-        if (pushed_cnt >= line_cnt) {
+        if pushed_cnt >= line_cnt {
             break;
         }
     }

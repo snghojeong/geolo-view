@@ -76,7 +76,7 @@ fn read_log(py: Python, path: String, pos: u64, line_cnt: i32, kwds: Option<&PyD
                     None => { }
                 }
             },
-            Err(error) => {
+            Err(_) => {
                 break;
             }
         }
@@ -86,7 +86,7 @@ fn read_log(py: Python, path: String, pos: u64, line_cnt: i32, kwds: Option<&PyD
         }
     }
 
-    let mut dict = PyDict::new(py);
+    let dict = PyDict::new(py);
     dict.set_item("pos", reader.strm_pos().unwrap())?;
     dict.set_item("log", log_buf)?;
     Ok(dict.into())

@@ -24,10 +24,6 @@ pub fn mod_name(log_line: &str) -> &str {
     &log_line[58..78]
 }
 
-pub fn line(log_line: &str) -> &str {
-    &log_line[80..83]
-}
-
 pub fn msg(log_line: &str) -> &str {
     &log_line[85..]
 }
@@ -55,7 +51,7 @@ pub struct LogReader {
 
 impl LogReader {
     pub fn open(path: &str, pos: u64) -> Result<Self> {
-        let mut file = File::open(path)?;
+        let file = File::open(path)?;
         let mut reader = BufReader::new(file);
         let mut line_buf = String::new();
 
@@ -69,7 +65,7 @@ impl LogReader {
             line_buf.clear();
         }
 
-        let mut inst = LogReader {
+        let inst = LogReader {
             reader: reader,
             line_buf: line_buf,
         };

@@ -9,23 +9,23 @@ pub fn seq(log_line: &str) -> &str {
 }
 
 pub fn date(log_line: &str) -> &str {
-    &log_line[5..11]
+    &log_line[5..23]
 }
 
 pub fn level(log_line: &str) -> &str {
-    &log_line[25..29]
+    &log_line[25..28]
 }
 
 pub fn qlabel(log_line: &str) -> &str {
-    &log_line[30..57]
+    &log_line[30..55]
 }
 
 pub fn mod_name(log_line: &str) -> &str {
-    &log_line[58..78]
+    &log_line[57..77]
 }
 
 pub fn msg(log_line: &str) -> &str {
-    &log_line[85..]
+    &log_line[84..]
 }
 
 fn is_log_line(log_line: &str) -> bool {

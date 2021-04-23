@@ -21,10 +21,12 @@ class MyApp(QWidget):
         # Filter Area
         self.seq_label = QLabel()
         self.seq_label.setText("SEQ")
+        self.seq_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.seqle = QLineEdit()
         self.seqle.returnPressed.connect(self.apply_filter)
         self.seq_cbox = QComboBox()
         self.seq_cbox.setLineEdit(self.seqle)
+        self.seq_cbox.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         #self.combo_box.addItems(["a", "b"])
 
         self.lv_label = QLabel()

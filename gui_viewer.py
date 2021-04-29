@@ -130,9 +130,9 @@ class MyApp(QWidget):
         self.tb.clear()
         ret = geolo_view.read_log('jup.log', 0, 100, 
                 seq=self.seqle.text(),
+                date=self.date_le.text(),
                 lv=self.lvle.text(),
                 qlabel=self.qlle.text(),
-                tid=self.tidle.text(),
                 md=self.mdle.text(),
                 msg=self.msgle.text())
         self.tb.append(ret["log"])
@@ -143,7 +143,13 @@ class MyApp(QWidget):
 
     def prev_logs(self):
         self.tb.clear()
-        ret = geolo_view.read_log('jup.log', self.prev_pos, 100, md=self.fltr_md)
+        ret = geolo_view.read_log('jup.log', 0, 100, 
+                seq=self.seqle.text(),
+                date=self.date_le.text(),
+                lv=self.lvle.text(),
+                qlabel=self.qlle.text(),
+                md=self.mdle.text(),
+                msg=self.msgle.text())
         self.tb.append(ret["log"])
         self.pos_list.pop()
         self.prev_pos = self.pos_list[-2]
@@ -153,7 +159,13 @@ class MyApp(QWidget):
 
     def next_logs(self):
         self.tb.clear()
-        ret = geolo_view.read_log('jup.log', self.next_pos, 100, md=self.fltr_md)
+        ret = geolo_view.read_log('jup.log', 0, 100, 
+                seq=self.seqle.text(),
+                date=self.date_le.text(),
+                lv=self.lvle.text(),
+                qlabel=self.qlle.text(),
+                md=self.mdle.text(),
+                msg=self.msgle.text())
         self.tb.append(ret["log"])
         self.prev_pos = self.pos_list[-1]
         self.pos_list.append(self.next_pos)

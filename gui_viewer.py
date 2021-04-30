@@ -3,9 +3,10 @@ import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QFont
 from PyQt5.QtGui import QFontDatabase
+from PyQt5.QtGui import QIcon
 
 
-class MyApp(QWidget):
+class MainWidget(QWidget):
 
     def __init__(self):
         super().__init__()
@@ -118,9 +119,6 @@ class MyApp(QWidget):
         self.tb.append(ret["log"])
         self.prev_pos = 0
         self.next_pos = ret["pos"]
-
-        self.setWindowTitle('QTextBrowser')
-        self.setGeometry(100, 300, 1200, 300)
         self.show()
 
         scrollBar = self.tb.verticalScrollBar()
@@ -172,6 +170,33 @@ class MyApp(QWidget):
         self.next_pos = ret["pos"]
         scrollBar = self.tb.verticalScrollBar()
         scrollBar.setValue(0)
+
+class MyApp(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+
+    def initUI(self):
+        main_wg = MainWidget()
+        self.setCentralWidget(main_wg)
+
+        # File chooser
+        openFile = QAction(QIcon('open.png'), 'Open', self)
+        openFile.setShortcut('Ctrl+O')
+        openFile.triggered.connect(self.showFileDlg)
+
+        menubar = self.menuBar()
+        menubar.setNativeMenuBar(False)
+        fileMenu = menubar.addMenu('&File')
+        fileMenu.addAction(openFile)
+
+        self.setWindowTitle('earth log viewer')
+        self.setGeometry(100, 300, 1200, 1000)
+        self.show()
+
+    def showFileDlg(self):
+        self.fname = QFileDialog.getOpenFileName(self, 'Open file', './')
+        self.tb.append(self.fname)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

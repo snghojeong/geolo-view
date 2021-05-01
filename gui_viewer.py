@@ -124,6 +124,19 @@ class MainWidget(QWidget):
         scrollBar = self.tb.verticalScrollBar()
         scrollBar.setValue(0)
 
+    def load_file(self):
+        self.tb.clear()
+        ret = geolo_view.read_log('jup.log', 0, 100, 
+                seq=self.seqle.text(),
+                date=self.date_le.text(),
+                lv=self.lvle.text(),
+                qlabel=self.qlle.text(),
+                md=self.mdle.text(),
+                msg=self.msgle.text())
+        self.tb.append(ret["log"])
+        self.prev_pos = 0
+        self.next_pos = ret["pos"]
+
     def apply_filter(self):
         self.tb.clear()
         ret = geolo_view.read_log('jup.log', 0, 100, 
@@ -141,7 +154,7 @@ class MainWidget(QWidget):
 
     def prev_logs(self):
         self.tb.clear()
-        ret = geolo_view.read_log('jup.log', 0, 100, 
+        ret = geolo_view.read_log('jup.log', self.prev_pos, 100, 
                 seq=self.seqle.text(),
                 date=self.date_le.text(),
                 lv=self.lvle.text(),
@@ -157,7 +170,7 @@ class MainWidget(QWidget):
 
     def next_logs(self):
         self.tb.clear()
-        ret = geolo_view.read_log('jup.log', 0, 100, 
+        ret = geolo_view.read_log('jup.log', self.next_pos, 100, 
                 seq=self.seqle.text(),
                 date=self.date_le.text(),
                 lv=self.lvle.text(),

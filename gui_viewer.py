@@ -115,18 +115,11 @@ class MainWidget(QWidget):
 
         self.setLayout(vbox)
 
-        ret = geolo_view.read_log('jup.log', 0, 100)
-        self.tb.append(ret["log"])
-        self.prev_pos = 0
-        self.next_pos = ret["pos"]
         self.show()
 
-        scrollBar = self.tb.verticalScrollBar()
-        scrollBar.setValue(0)
-
-    def load_file(self):
+    def load_file(self, fname):
         self.tb.clear()
-        ret = geolo_view.read_log('jup.log', 0, 100, 
+        ret = geolo_view.read_log(fname, 0, 100, 
                 seq=self.seqle.text(),
                 date=self.date_le.text(),
                 lv=self.lvle.text(),
@@ -190,7 +183,11 @@ class MyApp(QMainWindow):
         self.initUI()
 
     def initUI(self):
+        self.showFileDlg()
         main_wg = MainWidget()
+        main_wg.load_file(self.fname)
+        scrollBar = main_wg.tb.verticalScrollBar()
+        scrollBar.setValue(0)
         self.setCentralWidget(main_wg)
 
         # File chooser
@@ -208,8 +205,8 @@ class MyApp(QMainWindow):
         self.show()
 
     def showFileDlg(self):
-        self.fname = QFileDialog.getOpenFileName(self, 'Open file', './')
-        self.tb.append(self.fname)
+        fnames = QFileDialog.getOpenFileName(self, 'Open file', './')
+        self.fname = fnames[0]
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

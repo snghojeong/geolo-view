@@ -8,13 +8,20 @@ from PyQt5.QtGui import QIcon
 
 class MainWidget(QWidget):
 
-    def __init__(self):
+    def __init__(self, fname = ""):
         super().__init__()
+
         self.initUI()
+
         self.pos_list = list()
         self.pos_list.append(0)
 
-        self.fltr_md = ""
+        self.fname = fname
+        if self.fname != "":
+            self.prev_pos = 0
+            self.next_pos = self.load_file(self.fname, 0)
+            scrollBar = self.tb.verticalScrollBar()
+            scrollBar.setValue(0)
 
     def initUI(self):
         vbox = QVBoxLayout()
@@ -117,9 +124,9 @@ class MainWidget(QWidget):
 
         self.show()
 
-    def load_file(self, fname):
+    def load_file(self, fname, pos):
         self.tb.clear()
-        ret = geolo_view.read_log(fname, 0, 100, 
+        ret = geolo_view.read_log(fname, pos, 100, 
                 seq=self.seqle.text(),
                 date=self.date_le.text(),
                 lv=self.lvle.text(),
@@ -127,23 +134,14 @@ class MainWidget(QWidget):
                 md=self.mdle.text(),
                 msg=self.msgle.text())
         self.tb.append(ret["log"])
-        self.prev_pos = 0
-        self.next_pos = ret["pos"]
+        return ret["pos"];
 
     def apply_filter(self):
-        self.tb.clear()
-        ret = geolo_view.read_log('jup.log', 0, 100, 
-                seq=self.seqle.text(),
-                date=self.date_le.text(),
-                lv=self.lvle.text(),
-                qlabel=self.qlle.text(),
-                md=self.mdle.text(),
-                msg=self.msgle.text())
-        self.tb.append(ret["log"])
-        self.prev_pos = 0
-        self.next_pos = ret["pos"]
-        scrollBar = self.tb.verticalScrollBar()
-        scrollBar.setValue(0)
+        if self.fname != "":
+            self.prev_pos = 0
+            self.next_pos = self.load_file(self.fname, 0)
+            scrollBar = self.tb.verticalScrollBar()
+            scrollBar.setValue(0)
 
     def prev_logs(self):
         self.tb.clear()
@@ -183,11 +181,7 @@ class MyApp(QMainWindow):
         self.initUI()
 
     def initUI(self):
-        self.showFileDlg()
-        main_wg = MainWidget()
-        main_wg.load_file(self.fname)
-        scrollBar = main_wg.tb.verticalScrollBar()
-        scrollBar.setValue(0)
+        main_wg = MainWidget(self.showFileDlg())
         self.setCentralWidget(main_wg)
 
         # File chooser
@@ -206,7 +200,7 @@ class MyApp(QMainWindow):
 
     def showFileDlg(self):
         fnames = QFileDialog.getOpenFileName(self, 'Open file', './')
-        self.fname = fnames[0]
+        return fnames[0]
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

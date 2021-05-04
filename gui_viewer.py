@@ -144,20 +144,11 @@ class MainWidget(QWidget):
             scrollBar.setValue(0)
 
     def prev_logs(self):
-        self.tb.clear()
-        ret = geolo_view.read_log('jup.log', self.prev_pos, 100, 
-                seq=self.seqle.text(),
-                date=self.date_le.text(),
-                lv=self.lvle.text(),
-                qlabel=self.qlle.text(),
-                md=self.mdle.text(),
-                msg=self.msgle.text())
-        self.tb.append(ret["log"])
-        self.pos_list.pop()
-        self.prev_pos = self.pos_list[-2]
-        self.next_pos = ret["pos"]
-        scrollBar = self.tb.verticalScrollBar()
-        scrollBar.setValue(scrollBar.maximum())
+        if self.fname != "":
+            self.prev_pos = self.pos_list[-2]
+            self.next_pos = self.load_file(self.fname, 0)
+            scrollBar = self.tb.verticalScrollBar()
+            scrollBar.setValue(scrollBar.maximum())
 
     def next_logs(self):
         self.tb.clear()

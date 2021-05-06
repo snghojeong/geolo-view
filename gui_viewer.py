@@ -145,8 +145,9 @@ class MainWidget(QWidget):
 
     def prev_logs(self):
         if self.fname != "":
+            self.next_pos = self.load_file(self.fname, self.prev_pos)
             self.prev_pos = self.pos_list[-2]
-            self.next_pos = self.load_file(self.fname, 0)
+            self.pos_list.pop()
             scrollBar = self.tb.verticalScrollBar()
             scrollBar.setValue(scrollBar.maximum())
 

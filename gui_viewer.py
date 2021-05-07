@@ -27,16 +27,6 @@ class MainWidget(QWidget):
         vbox = QVBoxLayout()
 
         # Filter Area
-        self.seq_label = QLabel()
-        self.seq_label.setText("SEQ")
-        self.seq_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.seqle = QLineEdit()
-        self.seqle.returnPressed.connect(self.apply_filter)
-        self.seq_cbox = QComboBox()
-        self.seq_cbox.setLineEdit(self.seqle)
-        self.seq_cbox.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        #self.combo_box.addItems(["a", "b"])
-
         self.date_label = QLabel()
         self.date_label.setText("DATE")
         self.date_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
@@ -45,6 +35,7 @@ class MainWidget(QWidget):
         self.date_cbox = QComboBox()
         self.date_cbox.setLineEdit(self.date_le)
         self.date_cbox.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        #self.combo_box.addItems(["a", "b"])
 
         self.lv_label = QLabel()
         self.lv_label.setText("LEVEL")
@@ -81,18 +72,16 @@ class MainWidget(QWidget):
         self.msg_cbox.setLineEdit(self.msgle)
 
         fltrbox = QGridLayout()
-        fltrbox.addWidget(self.seq_label, 0, 0)
-        fltrbox.addWidget(self.seq_cbox, 1, 0)
-        fltrbox.addWidget(self.date_label, 0, 1)
-        fltrbox.addWidget(self.date_cbox, 1, 1)
-        fltrbox.addWidget(self.lv_label, 0, 2)
-        fltrbox.addWidget(self.lv_cbox, 1, 2)
-        fltrbox.addWidget(self.ql_label, 0, 3)
-        fltrbox.addWidget(self.ql_cbox, 1, 3)
-        fltrbox.addWidget(self.md_label, 0, 4)
-        fltrbox.addWidget(self.md_cbox, 1, 4)
-        fltrbox.addWidget(self.msg_label, 0, 5)
-        fltrbox.addWidget(self.msg_cbox, 1, 5)
+        fltrbox.addWidget(self.date_label, 0, 0)
+        fltrbox.addWidget(self.date_cbox, 1, 0)
+        fltrbox.addWidget(self.lv_label, 0, 1)
+        fltrbox.addWidget(self.lv_cbox, 1, 1)
+        fltrbox.addWidget(self.ql_label, 0, 2)
+        fltrbox.addWidget(self.ql_cbox, 1, 2)
+        fltrbox.addWidget(self.md_label, 0, 3)
+        fltrbox.addWidget(self.md_cbox, 1, 3)
+        fltrbox.addWidget(self.msg_label, 0, 4)
+        fltrbox.addWidget(self.msg_cbox, 1, 4)
 
         vbox.addLayout(fltrbox, 0)
 
@@ -127,7 +116,6 @@ class MainWidget(QWidget):
     def load_file(self, fname, pos):
         self.tb.clear()
         ret = geolo_view.read_log(fname, pos, 100, 
-                seq=self.seqle.text(),
                 date=self.date_le.text(),
                 lv=self.lvle.text(),
                 qlabel=self.qlle.text(),

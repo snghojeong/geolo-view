@@ -16,6 +16,12 @@ class MainWidget(QWidget):
         self.pos_list = list()
         self.pos_list.append(0)
 
+        self.filter_date = ''
+        self.filter_lv = ''
+        self.filter_qlabel = ''
+        self.filter_md = ''
+        self.filter_msg = ''
+
         self.fname = fname
         if self.fname != "":
             self.prev_pos = 0
@@ -27,61 +33,47 @@ class MainWidget(QWidget):
         vbox = QVBoxLayout()
 
         # Filter Area
-        self.date_label = QLabel()
-        self.date_label.setText("DATE")
-        self.date_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.date_le = QLineEdit()
         self.date_le.returnPressed.connect(self.apply_filter)
         self.date_cbox = QComboBox()
         self.date_cbox.setLineEdit(self.date_le)
         self.date_cbox.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        self.date_le.setText('DATE')
         #self.combo_box.addItems(["a", "b"])
 
-        self.lv_label = QLabel()
-        self.lv_label.setText("LEVEL")
-        self.lv_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.lvle = QLineEdit()
         self.lvle.returnPressed.connect(self.apply_filter)
         self.lv_cbox = QComboBox()
         self.lv_cbox.setLineEdit(self.lvle)
         self.lv_cbox.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        self.lvle.setText('LEVEL')
 
-        self.ql_label = QLabel()
-        self.ql_label.setText("QLABEL")
-        self.ql_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.qlle = QLineEdit()
         self.qlle.returnPressed.connect(self.apply_filter)
         self.ql_cbox = QComboBox()
         self.ql_cbox.setLineEdit(self.qlle)
         self.ql_cbox.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        self.qlle.setText('QLABEL')
 
-        self.md_label = QLabel()
-        self.md_label.setText("MD")
-        self.md_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.mdle = QLineEdit()
         self.mdle.returnPressed.connect(self.apply_filter)
         self.md_cbox = QComboBox()
         self.md_cbox.setLineEdit(self.mdle)
         self.md_cbox.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        self.mdle.setText('MODULE')
 
-        self.msg_label = QLabel()
-        self.msg_label.setText("MESSAGE")
         self.msgle = QLineEdit()
         self.msgle.returnPressed.connect(self.apply_filter)
         self.msg_cbox = QComboBox()
         self.msg_cbox.setLineEdit(self.msgle)
+        self.msgle.setText('MESSAGE')
 
-        fltrbox = QGridLayout()
-        fltrbox.addWidget(self.date_label, 0, 0)
-        fltrbox.addWidget(self.date_cbox, 1, 0)
-        fltrbox.addWidget(self.lv_label, 0, 1)
-        fltrbox.addWidget(self.lv_cbox, 1, 1)
-        fltrbox.addWidget(self.ql_label, 0, 2)
-        fltrbox.addWidget(self.ql_cbox, 1, 2)
-        fltrbox.addWidget(self.md_label, 0, 3)
-        fltrbox.addWidget(self.md_cbox, 1, 3)
-        fltrbox.addWidget(self.msg_label, 0, 4)
-        fltrbox.addWidget(self.msg_cbox, 1, 4)
+        fltrbox = QHBoxLayout()
+        fltrbox.addWidget(self.date_cbox, 0)
+        fltrbox.addWidget(self.lv_cbox, 1)
+        fltrbox.addWidget(self.ql_cbox, 2)
+        fltrbox.addWidget(self.md_cbox, 3)
+        fltrbox.addWidget(self.msg_cbox, 4)
 
         vbox.addLayout(fltrbox, 0)
 
@@ -116,11 +108,11 @@ class MainWidget(QWidget):
     def load_file(self, fname, pos):
         self.tb.clear()
         ret = geolo_view.read_log(fname, pos, 100, 
-                date=self.date_le.text(),
-                lv=self.lvle.text(),
-                qlabel=self.qlle.text(),
-                md=self.mdle.text(),
-                msg=self.msgle.text())
+                date=self.filter_date,
+                lv=self.filter_lv,
+                qlabel=self.filter_qlabel,
+                md=self.filter_md,
+                msg=self.filter_msg)
         self.tb.append(ret["log"])
         return ret["pos"];
 

@@ -11,16 +11,17 @@ class MainWidget(QWidget):
     def __init__(self, fname = ""):
         super().__init__()
 
+        self.filter_date = ''
+        self.filter_lv = ''
+        self.filter_qlabel = ''
+        self.filter_md = QLabel()
+        self.filter_md.setText('')
+        self.filter_msg = ''
+
         self.initUI()
 
         self.pos_list = list()
         self.pos_list.append(0)
-
-        self.filter_date = ''
-        self.filter_lv = ''
-        self.filter_qlabel = ''
-        self.filter_md = ''
-        self.filter_msg = ''
 
         self.fname = fname
         if self.fname != "":
@@ -56,11 +57,12 @@ class MainWidget(QWidget):
         self.qlle.setText('QLABEL')
 
         self.mdle = QLineEdit()
-        self.mdle.returnPressed.connect(self.apply_filter)
         self.md_cbox = QComboBox()
         self.md_cbox.setLineEdit(self.mdle)
         self.md_cbox.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.mdle.setText('MODULE')
+        self.mdle.returnPressed.connect(self.apply_filter)
+        self.mdle.textChanged.connect(self.filter_md.setText)
 
         self.msgle = QLineEdit()
         self.msgle.returnPressed.connect(self.apply_filter)
@@ -111,7 +113,7 @@ class MainWidget(QWidget):
                 date=self.filter_date,
                 lv=self.filter_lv,
                 qlabel=self.filter_qlabel,
-                md=self.filter_md,
+                md=self.filter_md.text(),
                 msg=self.filter_msg)
         self.tb.append(ret["log"])
         return ret["pos"];

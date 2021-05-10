@@ -16,7 +16,8 @@ class MainWidget(QWidget):
         self.filter_qlabel = ''
         self.filter_md = QLabel()
         self.filter_md.setText('')
-        self.filter_msg = ''
+        self.filter_msg = QLabel()
+        self.filter_msg.setText('')
 
         self.initUI()
 
@@ -65,10 +66,11 @@ class MainWidget(QWidget):
         self.mdle.textChanged.connect(self.filter_md.setText)
 
         self.msgle = QLineEdit()
-        self.msgle.returnPressed.connect(self.apply_filter)
         self.msg_cbox = QComboBox()
         self.msg_cbox.setLineEdit(self.msgle)
         self.msgle.setText('MESSAGE')
+        self.msgle.returnPressed.connect(self.apply_filter)
+        self.msgle.textChanged.connect(self.filter_msg.setText)
 
         fltrbox = QHBoxLayout()
         fltrbox.addWidget(self.date_cbox, 0)
@@ -114,7 +116,7 @@ class MainWidget(QWidget):
                 lv=self.filter_lv,
                 qlabel=self.filter_qlabel,
                 md=self.filter_md.text(),
-                msg=self.filter_msg)
+                msg=self.filter_msg.text())
         self.tb.append(ret["log"])
         return ret["pos"];
 

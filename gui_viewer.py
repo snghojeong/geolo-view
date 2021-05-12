@@ -12,7 +12,8 @@ class MainWidget(QWidget):
         super().__init__()
 
         self.filter_date = ''
-        self.filter_lv = ''
+        self.filter_lv = QLabel()
+        self.filter_lv.setText('')
         self.filter_qlabel = ''
         self.filter_md = QLabel()
         self.filter_md.setText('')
@@ -44,11 +45,12 @@ class MainWidget(QWidget):
         #self.combo_box.addItems(["a", "b"])
 
         self.lvle = QLineEdit()
-        self.lvle.returnPressed.connect(self.apply_filter)
         self.lv_cbox = QComboBox()
         self.lv_cbox.setLineEdit(self.lvle)
         self.lv_cbox.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.lvle.setText('LEVEL')
+        self.lvle.returnPressed.connect(self.apply_filter)
+        self.lvle.textChanged.connect(self.filter_lv.setText)
 
         self.qlle = QLineEdit()
         self.qlle.returnPressed.connect(self.apply_filter)
@@ -113,7 +115,7 @@ class MainWidget(QWidget):
         self.tb.clear()
         ret = geolo_view.read_log(fname, pos, 100, 
                 date=self.filter_date,
-                lv=self.filter_lv,
+                lv=self.filter_lv.text(),
                 qlabel=self.filter_qlabel,
                 md=self.filter_md.text(),
                 msg=self.filter_msg.text())

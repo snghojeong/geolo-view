@@ -68,6 +68,7 @@ fn read_log(py: Python, path: String, pos: u64, line_cnt: i32, kwds: Option<&PyD
         let log_line = reader.read_log_line();
         match log_line {
             Ok(unwrap_log_ln) => {
+                println!("log_line: { }", unwrap_log_ln);
                 match filter_log(&unwrap_log_ln, &seq, &date, &lv, &qlabel, &md, &msg) {
                     Some(filtered_log) => {
                         log_buf.push_str(filtered_log.as_str());
@@ -80,6 +81,8 @@ fn read_log(py: Python, path: String, pos: u64, line_cnt: i32, kwds: Option<&PyD
                 break;
             }
         }
+
+        println!("{ }  { }", pushed_cnt, line_cnt);
 
         if pushed_cnt >= line_cnt {
             break;

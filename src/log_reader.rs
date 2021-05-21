@@ -12,6 +12,10 @@ pub fn date(log_line: &str) -> &str {
     &log_line[5..23]
 }
 
+pub fn year(log_line: &str) -> &str {
+    &log_line[5..8]
+}
+
 pub fn level(log_line: &str) -> &str {
     &log_line[25..28]
 }

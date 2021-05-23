@@ -34,7 +34,7 @@ pub fn msg(log_line: &str) -> &str {
 
 fn is_log_line(log_line: &str) -> bool {
     if log_line.len() > 77 {
-        let log_seq = &log_line[0..3];
+        let log_seq = seq(log_line);
         let has_log_seq = if log_seq.parse::<f64>().is_ok() { true }
                           else { false };
         if has_log_seq { true }

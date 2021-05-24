@@ -9,11 +9,11 @@ pub fn seq(log_line: &str) -> &str {
 }
 
 pub fn date(log_line: &str) -> &str {
-    &log_line[5..23]
+    &log_line[5..10]
 }
 
-pub fn year(log_line: &str) -> &str {
-    &log_line[5..8]
+pub fn time(log_line: &str) -> &str {
+    &log_line[12..23]
 }
 
 pub fn level(log_line: &str) -> &str {
@@ -35,9 +35,12 @@ pub fn msg(log_line: &str) -> &str {
 fn is_log_line(log_line: &str) -> bool {
     if log_line.len() > 77 {
         let log_seq = seq(log_line);
+        let log_date = date(log_line);
         let has_log_seq = if log_seq.parse::<f64>().is_ok() { true }
                           else { false };
-        if has_log_seq { true }
+        let has_log_date = if log_date.parse::<f64>().is_ok() { true }
+                           else { false };
+        if has_log_seq && has_log_date { true }
         else { false }
     }
     else {

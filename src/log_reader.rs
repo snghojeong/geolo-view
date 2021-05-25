@@ -17,7 +17,7 @@ pub fn time(log_line: &str) -> &str {
 }
 
 pub fn level(log_line: &str) -> &str {
-    &log_line[25..28]
+    &log_line[25..29]
 }
 
 pub fn qlabel(log_line: &str) -> &str {

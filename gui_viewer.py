@@ -100,6 +100,16 @@ class MainWidget(QWidget):
         vbox.addWidget(self.tb, 1)
 
         # Button Area
+        self.find_le = QLineEdit()
+
+        self.prev_find_btn = QPushButton('<')
+        self.prev_find_btn.pressed.connect(self.find_prev)
+        self.prev_find_btn.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+
+        self.next_find_btn = QPushButton('>')
+        self.next_find_btn.pressed.connect(self.find_next)
+        self.next_find_btn.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+
         self.prev_btn = QPushButton('Prev')
         self.prev_btn.pressed.connect(self.prev_logs)
         self.prev_btn.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
@@ -109,8 +119,11 @@ class MainWidget(QWidget):
         self.next_btn.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
 
         btnbox = QHBoxLayout()
-        btnbox.addWidget(self.prev_btn, 0)
-        btnbox.addWidget(self.next_btn, 1)
+        btnbox.addWidget(self.find_le, 0)
+        btnbox.addWidget(self.prev_find_btn, 1)
+        btnbox.addWidget(self.next_find_btn, 2)
+        btnbox.addWidget(self.prev_btn, 3)
+        btnbox.addWidget(self.next_btn, 4)
 
         vbox.addLayout(btnbox, 2)
 
@@ -135,7 +148,6 @@ class MainWidget(QWidget):
             self.next_pos = self.load_file(self.fname, 0)
             scrollBar = self.tb.verticalScrollBar()
             scrollBar.setValue(0)
-            self.find_text()
 
     def prev_logs(self):
         if self.fname != "":
@@ -153,7 +165,26 @@ class MainWidget(QWidget):
             scrollBar = self.tb.verticalScrollBar()
             scrollBar.setValue(0)
 
-    def find_text(self):
+    def find_next(self):
+        palette = self.tb.palette()
+        text_format = QTextCharFormat()
+        text_format.setBackground(palette.brush(QPalette.Normal, QPalette.Highlight))
+        text_format.setForeground(palette.brush(QPalette.Normal, QPalette.HighlightedText))
+        doc = self.tb.document()
+        cur = QTextCursor()
+        selections = []
+        while 1:
+            cur = doc.find('EVS', cur)
+            if cur.isNull():
+                break
+            sel = QTextEdit.ExtraSelection()
+            sel.cusor = cur
+            sel.format = text_format
+            selections.append(sel)
+        self.tb.setExtraSelections(selections)
+        self.tb.show()
+
+    def find_prev(self):
         palette = self.tb.palette()
         text_format = QTextCharFormat()
         text_format.setBackground(palette.brush(QPalette.Normal, QPalette.Highlight))

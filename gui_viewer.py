@@ -1,5 +1,6 @@
 import geolo_view
 import sys
+import re
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QFont
 from PyQt5.QtGui import QFontDatabase
@@ -29,6 +30,8 @@ class MainWidget(QWidget):
 
         self.pos_list = list()
         self.pos_list.append(0)
+
+        self.last_match = None
 
         self.fname = fname
         if self.fname != "":
@@ -166,23 +169,27 @@ class MainWidget(QWidget):
             scrollBar.setValue(0)
 
     def find_next(self):
-        palette = self.tb.palette()
-        text_format = QTextCharFormat()
-        text_format.setBackground(palette.brush(QPalette.Normal, QPalette.Highlight))
-        text_format.setForeground(palette.brush(QPalette.Normal, QPalette.HighlightedText))
-        doc = self.tb.document()
-        cur = QTextCursor()
-        selections = []
-        while 1:
-            cur = doc.find('EVS', cur)
-            if cur.isNull():
-                break
-            sel = QTextEdit.ExtraSelection()
-            sel.cusor = cur
-            sel.format = text_format
-            selections.append(sel)
-        self.tb.setExtraSelections(selections)
-        self.tb.show()
+        text = self.tb.toPlainText()
+        query = self.find_le.text()
+        print(text)
+        print(query)
+        pattern = re.compile(query,0)
+
+        start = self.last_match.start() + 1 if self.last_match else 0
+        print(start)
+
+        self.last_match = pattern.search(text,start)
+
+        if self.last_match:
+            start = self.last_match.start()
+            end = self.last_match.end()
+            print(start)
+            print(end)
+
+            self.tb.moveCursor(start,end)
+        else:
+            print("not found")
+            self.tb.moveCursor(QtGui.QTextCursor.End)
 
     def find_prev(self):
         palette = self.tb.palette()

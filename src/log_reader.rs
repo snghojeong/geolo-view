@@ -33,7 +33,7 @@ pub fn msg(log_line: &str) -> &str {
 }
 
 fn is_log_line(log_line: &str) -> bool {
-    if log_line.len() > 84 {
+    if log_line.len() > 83 {
         let log_seq = seq(log_line);
         let log_date = date(log_line);
         let log_time = time(log_line);

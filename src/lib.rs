@@ -20,6 +20,22 @@ fn is_matched(kwds: &Option<Vec<String>>, log_field: &str) -> bool {
     }
 }
 
+fn is_within_date(kwds: &Option<Vec<String>>, log_field: &str) -> bool {
+    match kwds {
+        None => { 
+            return true;
+        },
+        Some(seq_str) => {
+            for s in seq_str {
+                if log_field.contains(s) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+}
+
 fn filter_log<'a>(log_line: &'a String, 
                   seq: &'a Option<Vec<String>>, 
                   date: &'a Option<Vec<String>>, 
@@ -28,7 +44,7 @@ fn filter_log<'a>(log_line: &'a String,
                   md: &'a Option<Vec<String>>, 
                   msg: &'a Option<Vec<String>>) -> Option<&'a String> {
     let is_match_seq = is_matched(seq, log_reader::seq(log_line.as_str()));
-    let is_match_date = is_matched(date, log_reader::date(log_line.as_str()));
+    let is_match_date = is_within_date(date, log_reader::date(log_line.as_str()));
     let is_match_lv = is_matched(lv, log_reader::level(log_line.as_str()));
     let is_match_qlabel = is_matched(qlabel, log_reader::qlabel(log_line.as_str()));
     let is_match_md = is_matched(md, log_reader::mod_name(log_line.as_str()));

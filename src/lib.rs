@@ -36,6 +36,22 @@ fn is_within_date(kwds: &Option<Vec<String>>, log_field: &str) -> bool {
     }
 }
 
+fn is_within_time(kwds: &Option<Vec<String>>, log_field: &str) -> bool {
+    match kwds {
+        None => { 
+            return true;
+        },
+        Some(seq_str) => {
+            for s in seq_str {
+                if log_field.contains(s) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+}
+
 fn filter_log<'a>(log_line: &'a String, 
                   seq: &'a Option<Vec<String>>, 
                   date: &'a Option<Vec<String>>, 

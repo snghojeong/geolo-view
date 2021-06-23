@@ -67,7 +67,7 @@ fn filter_log<'a>(log_line: &'a String,
     let is_match_md = is_matched(md, log_reader::mod_name(log_line.as_str()));
     let is_match_msg = is_matched(msg, log_reader::msg(log_line.as_str()));
 
-    if is_match_seq && is_match_date && is_match_lv && is_match_qlabel && is_match_md && is_match_msg {
+    if is_match_seq && is_match_date && is_match_time && is_match_lv && is_match_qlabel && is_match_md && is_match_msg {
         Some(log_line)
     }
     else {

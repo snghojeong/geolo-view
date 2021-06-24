@@ -27,11 +27,11 @@ fn is_within_date(kwds: &Option<Vec<String>>, log_field: &str) -> bool {
         },
         Some(seq_str) => {
             for s in seq_str {
-                if log_field.contains(s) {
-                    return true;
+                if !log_field.contains(s) {
+                    return false;
                 }
             }
-            return false;
+            return true;
         }
     }
 }

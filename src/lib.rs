@@ -7,15 +7,15 @@ mod log_reader;
 fn is_matched(kwds: &Option<Vec<String>>, log_field: &str) -> bool {
     match kwds {
         None => { 
-            true
+            return true;
         },
         Some(seq_str) => {
             for s in seq_str {
                 if log_field.contains(s) {
-                    true
+                    return true;
                 }
             }
-            false
+            return false;
         }
     }
 }

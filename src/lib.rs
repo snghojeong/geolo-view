@@ -48,7 +48,7 @@ fn split_filter_keywords(kwds: Option<&PyDict>, kwd: &str) -> Option<Vec<String>
                            .extract().unwrap_or(None)?;
     let fltr_kwd_list: Vec<&str> = item_str.as_str().split(',').collect();
     let ret_items = fltr_kwd_list.iter().map(|s| { s.to_string() }).collect();
-    Some(ret_items)
+    return Some(ret_items);
 }
 
 /// Formats the sum of two numbers as string.

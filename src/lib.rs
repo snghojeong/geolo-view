@@ -82,7 +82,7 @@ fn read_log(py: Python, path: String, pos: u64, line_cnt: i32, kwds: Option<&PyD
             }
         }
 
-        if pushed_cnt >= line_cnt {
+        if (line_cnt > 0) && (pushed_cnt >= line_cnt) {
             break;
         }
     }

@@ -23,13 +23,14 @@ fn is_matched(kwds: &Option<Vec<String>>, log_field: &str) -> bool {
 fn filter_log<'a>(log_line: &'a String, 
                   seq: &'a Option<Vec<String>>, 
                   date: &'a Option<Vec<String>>, 
+                  time: &'a Option<Vec<String>>, 
                   lv: &'a Option<Vec<String>>, 
                   qlabel: &'a Option<Vec<String>>, 
                   md: &'a Option<Vec<String>>, 
                   msg: &'a Option<Vec<String>>) -> Option<&'a String> {
     let is_match_seq = is_matched(seq, log_reader::seq(log_line.as_str()));
     let is_match_date = is_matched(date, log_reader::date(log_line.as_str()));
-    let is_match_time = is_matched(date, log_reader::time(log_line.as_str()));
+    let is_match_time = is_matched(time, log_reader::time(log_line.as_str()));
     let is_match_lv = is_matched(lv, log_reader::level(log_line.as_str()));
     let is_match_qlabel = is_matched(qlabel, log_reader::qlabel(log_line.as_str()));
     let is_match_md = is_matched(md, log_reader::mod_name(log_line.as_str()));
@@ -59,6 +60,7 @@ fn read_log(py: Python, path: String, pos: u64, line_cnt: i32, kwds: Option<&PyD
 
     let seq = split_filter_keywords(kwds, "seq");
     let date = split_filter_keywords(kwds, "date");
+    let time = split_filter_keywords(kwds, "time");
     let lv = split_filter_keywords(kwds, "lv");
     let qlabel = split_filter_keywords(kwds, "qlabel");
     let md = split_filter_keywords(kwds, "md");
@@ -69,7 +71,7 @@ fn read_log(py: Python, path: String, pos: u64, line_cnt: i32, kwds: Option<&PyD
         let log_line = reader.read_log_line();
         match log_line {
             Ok(unwrap_log_ln) => {
-                match filter_log(&unwrap_log_ln, &seq, &date, &lv, &qlabel, &md, &msg) {
+                match filter_log(&unwrap_log_ln, &seq, &date, &time, &lv, &qlabel, &md, &msg) {
                     Some(filtered_log) => {
                         log_buf.push_str(filtered_log.as_str());
                         pushed_cnt += 1;

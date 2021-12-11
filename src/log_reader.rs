@@ -13,9 +13,9 @@ pub fn date(log_line: &str) -> &str {
     &log_line[5..10]
 }
 
-pub fn time(log_line: &str) -> DateTime<Tz> {
+pub fn time(log_line: &str) -> DateTime<Utc> {
     //&log_line[12..23];
-    DateTime::<Utc>::from_utc(NaiveDateTime::from_timestamp(61, 0), Utc);
+    DateTime::<Utc>::from_utc(NaiveDateTime::from_timestamp(61, 0), Utc)
 }
 
 pub fn level(log_line: &str) -> &str {

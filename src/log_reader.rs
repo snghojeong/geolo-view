@@ -3,7 +3,7 @@ use std::io::Result;
 use std::io::prelude::*;
 use std::io::SeekFrom;
 use std::io::BufReader;
-use chrono::{DateTime, TimeZone, NaiveDateTime, Utc};
+use chrono::{DateTime, TimeZone, NaiveTime, Utc};
 
 pub fn seq(log_line: &str) -> &str {
     &log_line[0..3]
@@ -13,9 +13,8 @@ pub fn date(log_line: &str) -> &str {
     &log_line[5..10]
 }
 
-pub fn time(log_line: &str) -> DateTime<Utc> {
-    //&log_line[12..23];
-    DateTime::<Utc>::from_utc(NaiveDateTime::from_timestamp(61, 0), Utc)
+pub fn time(log_line: &str) -> NaiveTime {
+    NaiveTime::parse_from_str(&log_line[12..23], "%H:%M:%S")
 }
 
 pub fn level(log_line: &str) -> &str {

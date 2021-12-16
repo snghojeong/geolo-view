@@ -21,6 +21,22 @@ fn is_matched(kwds: &Option<Vec<String>>, log_field: &str) -> bool {
     }
 }
 
+fn is_matched(kwds: &Option<Vec<String>>, log_time: &NaiveTime) -> bool {
+    match kwds {
+        None => { 
+            return true;
+        },
+        Some(seq_str) => {
+            for s in seq_str {
+                if log_time == NaiveTime::parse_from_str(s, "%H:%M:%S") {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+}
+
 fn filter_log<'a>(log_line: &'a String, 
                   seq: &'a Option<Vec<String>>, 
                   date: &'a Option<Vec<String>>, 

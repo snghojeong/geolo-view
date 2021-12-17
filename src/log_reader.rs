@@ -13,7 +13,7 @@ pub fn date(log_line: &str) -> &str {
     &log_line[5..10]
 }
 
-pub fn time(log_line: &str) -> NaiveTime {
+pub fn time(log_line: &str) -> Result<NaiveTime, std::io::Error> {
     NaiveTime::parse_from_str(&log_line[12..23], "%H:%M:%S")
 }
 

@@ -4,6 +4,7 @@ use std::io::prelude::*;
 use std::io::SeekFrom;
 use std::io::BufReader;
 use chrono::{DateTime, TimeZone, NaiveTime, Utc};
+use chrono::format::ParseResult;
 
 pub fn seq(log_line: &str) -> &str {
     &log_line[0..3]
@@ -13,7 +14,7 @@ pub fn date(log_line: &str) -> &str {
     &log_line[5..10]
 }
 
-pub fn time(log_line: &str) -> Result<NaiveTime, std::io::Error> {
+pub fn time(log_line: &str) -> ParseResult<NaiveTime> {
     NaiveTime::parse_from_str(&log_line[12..23], "%H:%M:%S")
 }
 

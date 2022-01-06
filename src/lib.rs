@@ -27,12 +27,15 @@ fn is_in_time(kwds: &Option<Vec<String>>, log_time: &NaiveTime) -> bool {
             return true;
         },
         Some(seq_str) => {
-            for s in seq_str {
-                if log_time == NaiveTime::parse_from_str(s, "%H:%M:%S") {
-                    return true;
-                }
+            let mut before = (seq_str.len() > 0).then(|| NaiveTime::parse_from_str(&seq_str[0], "%H:%M:%S"));
+            let mut after = (seq_str.len() > 1).then(|| NaiveTime::parse_from_str(&seq_str[1], "%H:%M:%S"));
+
+            if before <= log_time && after >= log_time {
+                return true;
             }
-            return false;
+            else {
+                return false;
+            }
         }
     }
 }

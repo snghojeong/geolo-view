@@ -21,16 +21,16 @@ fn is_matched(kwds: &Option<Vec<String>>, log_field: &str) -> bool {
     }
 }
 
-fn is_in_time(kwds: &Option<Vec<String>>, log_time: &NaiveTime) -> bool {
+fn is_in_time(kwds: &Option<Vec<String>>, log_time: NaiveTime) -> bool {
     match kwds {
         None => { 
             return true;
         },
         Some(seq_str) => {
-            let mut before = (seq_str.len() > 0).then(|| NaiveTime::parse_from_str(&seq_str[0], "%H:%M:%S"));
-            let mut after = (seq_str.len() > 1).then(|| NaiveTime::parse_from_str(&seq_str[1], "%H:%M:%S"));
+            let mut before = (seq_str.len() > 0).then(|| NaiveTime::parse_from_str(&seq_str[0], "%H:%M:%S")).unwrap();
+            let mut after = (seq_str.len() > 1).then(|| NaiveTime::parse_from_str(&seq_str[1], "%H:%M:%S")).unwrap();
 
-            if before <= log_time && after >= log_time {
+            if before.ok().unwrap() <= log_time && after.ok().unwrap() >= log_time {
                 return true;
             }
             else {
@@ -50,7 +50,7 @@ fn filter_log<'a>(log_line: &'a String,
                   msg: &'a Option<Vec<String>>) -> Option<&'a String> {
     let is_match_seq = is_matched(seq, log_reader::seq(log_line.as_str()));
     let is_match_date = is_matched(date, log_reader::date(log_line.as_str()));
-    let is_match_time = is_in_time(time, log_reader::time(log_line.as_str()));
+    let is_match_time = is_in_time(time, log_reader::time(log_line.as_str()).unwrap());
     let is_match_lv = is_matched(lv, log_reader::level(log_line.as_str()));
     let is_match_qlabel = is_matched(qlabel, log_reader::qlabel(log_line.as_str()));
     let is_match_md = is_matched(md, log_reader::mod_name(log_line.as_str()));

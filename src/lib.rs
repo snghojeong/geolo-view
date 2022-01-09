@@ -27,15 +27,40 @@ fn is_in_time(kwds: &Option<Vec<String>>, log_time: NaiveTime) -> bool {
             return true;
         },
         Some(seq_str) => {
-            let mut before = (seq_str.len() > 0).then(|| NaiveTime::parse_from_str(&seq_str[0], "%H:%M:%S")).unwrap();
-            let mut after = (seq_str.len() > 1).then(|| NaiveTime::parse_from_str(&seq_str[1], "%H:%M:%S")).unwrap();
+            let is_later_than_left_time = {
+                if seq_str.len() > 0 {
+                    let left_time = NaiveTime::parse_from_str(&seq_str[0], "%H:%M:%S");
+                    match left_time {
+                        Ok(left_time_unwrap) => {
+                            left_time_unwrap <= log_time
+                        },
+                        Err(_) => {
+                            true
+                        }
+                    }
+                }
+                else {
+                    true
+                }
+            };
+            let is_early_than_right_time = {
+                if seq_str.len() > 1 {
+                    let right_time = NaiveTime::parse_from_str(&seq_str[1], "%H:%M:%S");
+                    match right_time {
+                        Ok(right_time_unwrap) => {
+                            right_time_unwrap >= log_time
+                        },
+                        Err(_) => {
+                            true
+                        }
+                    }
+                }
+                else {
+                    true
+                }
+            };
 
-            if before.ok().unwrap() <= log_time && after.ok().unwrap() >= log_time {
-                return true;
-            }
-            else {
-                return false;
-            }
+            return is_later_than_left_time && is_early_than_right_time;
         }
     }
 }

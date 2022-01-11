@@ -2,6 +2,7 @@ use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
 use pyo3::types::PyDict;
 use chrono::{DateTime, TimeZone, NaiveTime, Utc};
+use chrono::format::ParseResult;
 
 mod log_reader;
 
@@ -21,46 +22,53 @@ fn is_matched(kwds: &Option<Vec<String>>, log_field: &str) -> bool {
     }
 }
 
-fn is_in_time(kwds: &Option<Vec<String>>, log_time: NaiveTime) -> bool {
-    match kwds {
-        None => { 
+fn is_in_time(kwds: &Option<Vec<String>>, log_time: ParseResult<NaiveTime>) -> bool {
+    match log_time {
+        Err(_) => {
             return true;
         },
-        Some(seq_str) => {
-            let is_later_than_left_time = {
-                if seq_str.len() > 0 {
-                    let left_time = NaiveTime::parse_from_str(&seq_str[0], "%H:%M:%S");
-                    match left_time {
-                        Ok(left_time_unwrap) => {
-                            left_time_unwrap <= log_time
-                        },
-                        Err(_) => {
+        Ok(log_time) => {
+            match kwds {
+                None => { 
+                    return true;
+                },
+                Some(seq_str) => {
+                    let is_later_than_left_time = {
+                        if seq_str.len() > 0 {
+                            let left_time = NaiveTime::parse_from_str(&seq_str[0], "%H:%M:%S");
+                            match left_time {
+                                Ok(left_time_unwrap) => {
+                                    left_time_unwrap <= log_time
+                                },
+                                Err(_) => {
+                                    true
+                                }
+                            }
+                        }
+                        else {
                             true
                         }
-                    }
-                }
-                else {
-                    true
-                }
-            };
-            let is_early_than_right_time = {
-                if seq_str.len() > 1 {
-                    let right_time = NaiveTime::parse_from_str(&seq_str[1], "%H:%M:%S");
-                    match right_time {
-                        Ok(right_time_unwrap) => {
-                            right_time_unwrap >= log_time
-                        },
-                        Err(_) => {
+                    };
+                    let is_early_than_right_time = {
+                        if seq_str.len() > 1 {
+                            let right_time = NaiveTime::parse_from_str(&seq_str[1], "%H:%M:%S");
+                            match right_time {
+                                Ok(right_time_unwrap) => {
+                                    right_time_unwrap >= log_time
+                                },
+                                Err(_) => {
+                                    true
+                                }
+                            }
+                        }
+                        else {
                             true
                         }
-                    }
-                }
-                else {
-                    true
-                }
-            };
+                    };
 
-            return is_later_than_left_time && is_early_than_right_time;
+                    return is_later_than_left_time && is_early_than_right_time;
+                }
+            }
         }
     }
 }
@@ -75,7 +83,7 @@ fn filter_log<'a>(log_line: &'a String,
                   msg: &'a Option<Vec<String>>) -> Option<&'a String> {
     let is_match_seq = is_matched(seq, log_reader::seq(log_line.as_str()));
     let is_match_date = is_matched(date, log_reader::date(log_line.as_str()));
-    let is_match_time = is_in_time(time, log_reader::time(log_line.as_str()).unwrap());
+    let is_match_time = is_in_time(time, log_reader::time(log_line.as_str()));
     let is_match_lv = is_matched(lv, log_reader::level(log_line.as_str()));
     let is_match_qlabel = is_matched(qlabel, log_reader::qlabel(log_line.as_str()));
     let is_match_md = is_matched(md, log_reader::mod_name(log_line.as_str()));

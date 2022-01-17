@@ -22,53 +22,47 @@ fn is_matched(kwds: &Option<Vec<String>>, log_field: &str) -> bool {
     }
 }
 
-fn is_in_time(kwds: &Option<Vec<String>>, log_time: ParseResult<NaiveTime>) -> bool {
-    match log_time {
-        Err(_) => {
-            return true;
+fn is_in_time(kwds: &Option<Vec<String>>, log_time: ParseResult<NaiveTime>) -> Result<bool> {
+    let log_time = log_time?;
+    match kwds {
+        None => { 
+            return Ok(true);
         },
-        Ok(log_time) => {
-            match kwds {
-                None => { 
-                    return true;
-                },
-                Some(seq_str) => {
-                    let is_later_than_left_time = {
-                        if seq_str.len() > 0 {
-                            let left_time = NaiveTime::parse_from_str(&seq_str[0], "%H:%M:%S");
-                            match left_time {
-                                Ok(left_time_unwrap) => {
-                                    left_time_unwrap <= log_time
-                                },
-                                Err(_) => {
-                                    true
-                                }
-                            }
+        Some(seq_str) => {
+            let is_later_than_left_time = {
+                if seq_str.len() > 0 {
+                    let left_time = NaiveTime::parse_from_str(&seq_str[0], "%H:%M:%S");
+                    match left_time {
+                        Ok(left_time_unwrap) => {
+                            left_time_unwrap <= log_time
+                        },
+                        Err(_) => {
+                            Ok(true)
                         }
-                        else {
-                            true
-                        }
-                    };
-                    let is_early_than_right_time = {
-                        if seq_str.len() > 1 {
-                            let right_time = NaiveTime::parse_from_str(&seq_str[1], "%H:%M:%S");
-                            match right_time {
-                                Ok(right_time_unwrap) => {
-                                    right_time_unwrap >= log_time
-                                },
-                                Err(_) => {
-                                    true
-                                }
-                            }
-                        }
-                        else {
-                            true
-                        }
-                    };
-
-                    return is_later_than_left_time && is_early_than_right_time;
+                    }
                 }
-            }
+                else {
+                    Ok(true)
+                }
+            };
+            let is_early_than_right_time = {
+                if seq_str.len() > 1 {
+                    let right_time = NaiveTime::parse_from_str(&seq_str[1], "%H:%M:%S");
+                    match right_time {
+                        Ok(right_time_unwrap) => {
+                            right_time_unwrap >= log_time
+                        },
+                        Err(_) => {
+                            Ok(true)
+                        }
+                    }
+                }
+                else {
+                    Ok(true)
+                }
+            };
+
+            return is_later_than_left_time && is_early_than_right_time;
         }
     }
 }

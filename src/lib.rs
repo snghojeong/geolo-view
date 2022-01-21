@@ -23,7 +23,7 @@ fn is_matched(kwds: &Option<Vec<String>>, log_field: &str) -> bool {
     }
 }
 
-fn is_in_time(kwds: &Option<Vec<String>>, log_time: ParseResult<NaiveTime>) -> Result<bool> {
+fn is_in_time(kwds: &Option<Vec<String>>, log_time: ParseResult<NaiveTime>) -> ParseResult<bool> {
     let log_time = log_time?;
     match kwds {
         None => { 

@@ -38,12 +38,12 @@ fn is_in_time(kwds: &Option<Vec<String>>, log_time: ParseResult<NaiveTime>) -> P
                             left_time_unwrap <= log_time
                         },
                         Err(_) => {
-                            Ok(true)
+                            return Ok(true);
                         }
                     }
                 }
                 else {
-                    Ok(true)
+                    return Ok(true);
                 }
             };
             let is_early_than_right_time = {
@@ -54,12 +54,12 @@ fn is_in_time(kwds: &Option<Vec<String>>, log_time: ParseResult<NaiveTime>) -> P
                             right_time_unwrap >= log_time
                         },
                         Err(_) => {
-                            Ok(true)
+                            return Ok(true);
                         }
                     }
                 }
                 else {
-                    Ok(true)
+                    return Ok(true);
                 }
             };
 

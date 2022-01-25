@@ -63,7 +63,7 @@ fn is_in_time(kwds: &Option<Vec<String>>, log_time: ParseResult<NaiveTime>) -> P
                 }
             };
 
-            return is_later_than_left_time && is_early_than_right_time;
+            return Ok(is_later_than_left_time && is_early_than_right_time);
         }
     }
 }

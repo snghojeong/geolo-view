@@ -1,9 +1,8 @@
 use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
 use pyo3::types::PyDict;
-use chrono::{DateTime, TimeZone, NaiveTime, Utc};
+use chrono::NaiveTime;
 use chrono::format::ParseResult;
-use std::io::Result;
 
 mod log_reader;
 

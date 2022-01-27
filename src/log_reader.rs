@@ -3,7 +3,7 @@ use std::io::Result;
 use std::io::prelude::*;
 use std::io::SeekFrom;
 use std::io::BufReader;
-use chrono::{DateTime, TimeZone, NaiveTime, Utc};
+use chrono::NaiveTime;
 use chrono::format::ParseResult;
 
 pub fn seq(log_line: &str) -> &str {

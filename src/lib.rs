@@ -127,7 +127,7 @@ fn read_log(py: Python, path: String, pos: u64, line_cnt: i32, kwds: Option<&PyD
                 }
             },
             Err(e) => {
-                println!("{}", e);
+                println!("Failed to read log line. Error message: {}", e);
                 break;
             }
         }

@@ -38,14 +38,12 @@ fn is_log_line(log_line: &str) -> bool {
     if log_line.len() > 85 {
         let log_seq = seq(log_line);
         let log_date = date(log_line);
-        //let log_time = time(log_line);
         let _log_level = level(log_line);
         let _log_qlabel = qlabel(log_line);
         let has_log_seq = if log_seq.parse::<f64>().is_ok() { true }
                           else { false };
         let has_log_date = if log_date.parse::<f64>().is_ok() { true }
                            else { false };
-        //let _has_log_time = if log_time.parse::<f64>().is_ok() { true } else { false };
         if has_log_seq && has_log_date { true }
         else { false }
     }

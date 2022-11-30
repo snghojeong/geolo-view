@@ -2,6 +2,7 @@ use std::fs::File;
 use std::io::Result;
 use std::io::SeekFrom;
 use std::io::BufReader;
+use std::io::prelude::*;
 use chrono::NaiveTime;
 use chrono::format::ParseResult;
 

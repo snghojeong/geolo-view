@@ -1,3 +1,5 @@
+mod log_reader;
+
 fn main() {
     let mut log_buf = String::new();
     let mut pushed_cnt = 0;
